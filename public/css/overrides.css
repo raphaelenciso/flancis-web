@@ -1,0 +1,55 @@
+/* override button */
+.btn-outline-primary {
+  color: var(--accent-dark);
+  border-color: var(--accent-dark);
+  background-color: transparent;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus,
+.btn-outline-primary:active {
+  color: var(--text-dark);
+  background-color: var(--accent-light);
+  border-color: var(--accent-light);
+}
+
+/* Navbar overrides */
+.navbar-dark .navbar-nav .nav-link {
+  color: var(--text-light);
+  opacity: 0.9;
+  transition: opacity 0.3s ease, border-bottom 0.3s ease;
+  padding-bottom: 2px;
+  border-bottom: 2px solid transparent;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover,
+.navbar-dark .navbar-nav .nav-link:focus {
+  color: var(--text-light);
+  opacity: 1;
+  border-bottom: 2px solid var(--text-light);
+}
+
+.navbar-dark .navbar-nav .active > .nav-link,
+.navbar-dark .navbar-nav .nav-link.active,
+.navbar-dark .navbar-nav .nav-link.show,
+.navbar-dark .navbar-nav .show > .nav-link {
+  color: var(--text-light);
+  opacity: 1;
+  border-bottom: 2px solid var(--text-light);
+}
+
+/* Adjust the Register button in the navbar */
+.navbar-dark .navbar-nav .nav-item:last-child .btn-outline-primary {
+  color: var(--text-light);
+  border-color: var(--text-light);
+  transition: all 0.3s ease;
+}
+
+.navbar-dark .navbar-nav .nav-item:last-child .btn-outline-primary:hover,
+.navbar-dark .navbar-nav .nav-item:last-child .btn-outline-primary:focus,
+.navbar-dark .navbar-nav .nav-item:last-child .btn-outline-primary:active {
+  color: var(--primary-bg);
+  background-color: var(--text-light);
+  border-color: var(--text-light);
+}

@@ -1,0 +1,8 @@
+footer {
+  background-color: var(--primary-bg);
+  color: var(--text-light);
+}
+
+footer p {
+  margin-bottom: 0;
+}

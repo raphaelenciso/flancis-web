@@ -1,0 +1,28 @@
+#about-us {
+  background-color: var(--accent-light);
+}
+
+#about-us h1 {
+  color: var(--text-dark);
+}
+
+#about-us .card {
+  transition: transform 0.3s ease-in-out;
+  background-color: var(--text-light);
+}
+
+#about-us .card:hover {
+  transform: translateY(-5px);
+}
+
+#about-us .card-body .fas {
+  color: var(--primary-bg) !important;
+}
+
+#about-us .card-title {
+  color: var(--accent-medium);
+}
+
+#about-us .card-text {
+  color: var(--text-dark);
+}

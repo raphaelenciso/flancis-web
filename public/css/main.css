@@ -1,0 +1,25 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+:root {
+  --primary-bg: #ad7c52;
+  --secondary-bg: rgb(230, 205, 190);
+  --tertiary-bg: #e3dac9;
+  --accent-light: #dec4a9;
+  --accent-medium: #dcb084;
+  --accent-dark: #c8ad94;
+  --text-light: #ffffff;
+  --text-dark: #333333;
+  --highlight: #e6a756;
+  --shadow: rgba(0, 0, 0, 0.1);
+}
+
+/* Add these styles at the end of your main.css file */
+
+.logo {
+  border-radius: 50%;
+}

@@ -1,0 +1,122 @@
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu+Sans:ital,wght@0,100..800;1,100..800&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Ubuntu Sans', sans-serif;
+}
+
+body {
+  background: linear-gradient(
+    135deg,
+    var(--accent-dark) 0%,
+    var(--tertiary-bg) 100%
+  );
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-dark);
+}
+
+.container {
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 10px;
+  box-shadow: 0 0 20px var(--shadow);
+  padding: 30px;
+  max-width: 500px;
+  width: 100%;
+}
+
+.signin-form {
+  text-align: center;
+}
+
+.input-field {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.input-field label {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--accent-dark);
+  pointer-events: none;
+}
+
+.input-field input {
+  width: 100%;
+  padding: 10px 15px 10px 40px;
+  border: 1px solid var(--accent-light);
+  border-radius: 4px;
+  outline: none;
+  background-color: rgba(255, 255, 255, 0.8);
+  color: var(--text-dark);
+  transition: all 0.3s ease;
+}
+
+.input-field input:focus {
+  border-color: var(--accent-medium);
+  box-shadow: 0 0 0 0.2rem rgba(173, 124, 82, 0.25);
+  background-color: rgba(255, 255, 255, 1);
+}
+
+.btn {
+  display: inline-block;
+  background-color: var(--primary-bg);
+  color: var(--text-light);
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  font-size: 18px;
+  width: 100%;
+  margin-top: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn:hover {
+  background-color: var(--accent-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+h1,
+h2 {
+  color: var(--primary-bg);
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+p {
+  margin-top: 20px;
+  color: var(--text-dark);
+  text-align: center;
+}
+
+p a {
+  color: var(--primary-bg);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+p a:hover {
+  color: var(--accent-dark);
+  text-decoration: underline;
+}
+
+.error-message {
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+  color: #721c24;
+  margin-top: 10px;
+  padding: 10px;
+  text-align: center;
+  margin-bottom: 20px;
+  border-radius: 5px;
+}
