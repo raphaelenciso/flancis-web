@@ -18,6 +18,9 @@
 @endsection
 
 @section('content')
+<h1 class="h3 mb-2 text-gray-800">Appointments</h1>
+<p class="mb-4">Manage your appointments here.</p>
+
 <div class="card shadow mb-4">
   <div class="card-header py-3 d-flex justify-content-between align-items-center">
     <h6 class="m-0 font-weight-bold text-primary">All Appointments</h6>
@@ -138,32 +141,7 @@
 
 <script>
   $(document).ready(function() {
-    $('#appointmentsTable').DataTable({
-      "order": [
-        [2, "desc"],
-        [3, "desc"]
-      ],
-      "pageLength": 10,
-      "lengthMenu": [
-        [10, 25, 50, -1],
-        [10, 25, 50, "All"]
-      ],
-      "language": {
-        "search": "Search appointments:",
-        "lengthMenu": "Show _MENU_ appointments per page",
-        "info": "Showing _START_ to _END_ of _TOTAL_ appointments",
-        "infoEmpty": "Showing 0 to 0 of 0 appointments",
-        "infoFiltered": "(filtered from _MAX_ total appointments)",
-        "zeroRecords": "No matching appointments found",
-        "paginate": {
-          "first": "First",
-          "last": "Last",
-          "next": "Next",
-          "previous": "Previous"
-        }
-      },
-      "dom": '<"top"lf>rt<"bottom"ip><"clear">'
-    });
+    $('#appointmentsTable').DataTable();
 
     // View Appointment
     $(document).on('click', '.view-appointment-btn', function() {

@@ -1,6 +1,9 @@
 @extends('layouts.admin')
 
 @section('content')
+<h1 class="h3 mb-2 text-gray-800">Services</h1>
+<p class="mb-4">Manage your services here.</p>
+
 <div class="card shadow mb-4">
   <div class="card-header py-3 d-flex justify-content-between align-items-center">
     <h6 class="m-0 font-weight-bold text-primary">All Services</h6>
@@ -26,7 +29,7 @@
           <tr>
             <td data-description="{{ $service->description }}">{{ $service->service_name }}</td>
             <td>{{ $service->serviceType->service_type }}</td>
-            <td>${{ number_format($service->price, 2) }}</td>
+            <td>₱{{ number_format($service->price, 2) }}</td>
             <td>{{ $service->rating ?? 'N/A' }}</td>
             <td>{{ ucfirst($service->status) }}</td>
             <td>

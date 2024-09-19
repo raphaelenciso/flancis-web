@@ -30,12 +30,18 @@ class DashboardController extends Controller {
       ->limit(5)
       ->get();
 
+    $todayAppointments = Appointment::with(['user', 'service'])
+      ->whereDate('appointment_date', now()->toDateString())
+      ->orderBy('appointment_time')
+      ->get();
+
     return view('admin.dashboard', compact(
       'totalCustomers',
       'totalSales',
       'totalEmployees',
       'totalAppointments',
-      'topServices'
+      'topServices',
+      'todayAppointments'
     ));
   }
 }

@@ -8,11 +8,19 @@ use Illuminate\Http\Request;
 use App\Models\Service;
 use App\Models\ServiceType;
 use Illuminate\Support\Facades\Auth;
+use App\Jobs\SendAppointmentReminder;
+use App\Mail\AppointmentConfirmation;
+use Illuminate\Support\Facades\Mail;
 
 class BookAppointmentController extends Controller {
   public function index() {
-    $serviceTypes = ServiceType::all();
-    $services = Service::with('serviceType')->get();
+    $serviceTypes = ServiceType::where('status', 'active')->get();
+    $services = Service::with('serviceType')
+      ->where('status', 'active')
+      ->whereHas('serviceType', function ($query) {
+        $query->where('status', 'active');
+      })
+      ->get();
 
     return view('customer.book-appointment', compact('serviceTypes', 'services'));
   }
@@ -52,6 +60,13 @@ class BookAppointmentController extends Controller {
 
     $appointment->save();
 
-    return redirect('/customer/book-appointment')->with('success', 'Appointment booked successfully.');
+    // Eager load related models
+    $appointment->load('user', 'service');
+
+    // Send confirmation email
+    Mail::to(Auth::user()->email)->send(new AppointmentConfirmation($appointment));
+
+    return redirect('/customer/book-appointment')
+      ->with('success', 'Appointment booked successfully. A confirmation email has been sent, and a reminder email will be sent shortly.');
   }
 }

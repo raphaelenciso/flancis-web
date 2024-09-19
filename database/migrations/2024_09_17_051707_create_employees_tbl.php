@@ -14,7 +14,7 @@ return new class extends Migration {
       $table->string('employee_id', 36)->primary();
       $table->string('employee_first_name', 100);
       $table->string('employee_last_name', 100);
-      $table->string('employee_middle_name', 100);
+      $table->string('employee_middle_name', 100)->nullable();
       $table->string('gender', 30);
       $table->string('email', 100);
       $table->string('phone', 11);

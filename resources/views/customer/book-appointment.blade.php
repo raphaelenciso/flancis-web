@@ -32,7 +32,7 @@
         @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
         @endif
-        <form action="/customer/book-appointment" method="POST" enctype="multipart/form-data">
+        <form action={{ route('book-appointment.store') }} method="POST" enctype="multipart/form-data">
           @csrf
           <div class="form-group">
             <label for="appointment_date">Appointment Date</label>
@@ -43,10 +43,10 @@
             <select class="form-control" id="appointment_time" name="appointment_time" required>
               <option value="">Select Time</option>
               @for($hour = 10; $hour <= 20; $hour++)
-                @for($minute=0; $minute < 60; $minute +=30)
+                @for($minute = 0; $minute < 60; $minute += 5)
                 @php
-                $ampm=$hour>= 12 ? 'PM' : 'AM';
-                $hour12 = $hour > 12 ? $hour - 12 : $hour;
+                $ampm = $hour >= 12 ? 'PM' : 'AM';
+                $hour12 = $hour > 12 ? $hour - 12 : ($hour == 0 ? 12 : $hour);
                 $time = sprintf("%02d:%02d %s", $hour12, $minute, $ampm);
                 $value = sprintf("%02d:%02d", $hour, $minute);
                 @endphp

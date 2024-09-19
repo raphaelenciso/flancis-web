@@ -3,14 +3,20 @@
 use App\Http\Controllers\Admin\AppointmentController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\EmployeeController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\ServiceTypeController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Customer\ActivitiesController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\Customer\CustomerHomeController;
 use App\Http\Controllers\Customer\BookAppointmentController;
+use App\Http\Controllers\Customer\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\RatingController;
+use App\Http\Controllers\Admin\ResourceController;
+use App\Http\Controllers\Admin\PromoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,23 +45,24 @@ Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
 Route::post('/logout', [AuthController::class, 'logout']);
 
 Route::get('/profile', [UserController::class, 'index']);
-Route::get('/users/{id}', [UserController::class, 'view']);
+// Route::get('/users/{id}', [UserController::class, 'view']);
+Route::put('/profile', [UserController::class, 'update']);
+
 
 Route::prefix('/customer')->group(function () {
-  Route::get('/home', function () {
-    return view('customer.home');
-  });
+  Route::get('/home', [CustomerHomeController::class, 'index']);
 
-  Route::get('/book-appointment', [BookAppointmentController::class, 'index']);
-  Route::post('/book-appointment', [BookAppointmentController::class, 'store']);
+  Route::get('/book-appointment', [BookAppointmentController::class, 'index'])->name('book-appointment.index');
+  Route::post('/book-appointment', [BookAppointmentController::class, 'store'])->name('book-appointment.store');
 
 
   Route::get('/activities', [ActivitiesController::class, 'index']);
   Route::post('/submit-rating', [ActivitiesController::class, 'submitRating']);
 
-  Route::get('/profile', [UserController::class, 'show']);
-  Route::put('/profile', [UserController::class, 'update']);
+  Route::get('/profile', [ProfileController::class, 'show']);
 });
+Route::redirect('/customer', '/customer/home');
+
 
 Route::prefix('/admin')->group(function () {
   Route::get('/dashboard', [DashboardController::class, 'index']);
@@ -74,5 +81,26 @@ Route::prefix('/admin')->group(function () {
   Route::put('/appointments/{id}', [AppointmentController::class, 'update']);
 
   Route::get('/customers', [CustomerController::class, 'index']);
+  Route::get('/customers/{id}', [CustomerController::class, 'show']);
   Route::put('/customers/{id}', [CustomerController::class, 'update']);
+
+  Route::get('/employees', [EmployeeController::class, 'index']); // display
+  Route::get('/employees/add', [EmployeeController::class, 'create']); // display
+  Route::post('/employees', [EmployeeController::class, 'store']);
+  Route::get('/employees/{id}/edit', [EmployeeController::class, 'edit']); //display
+  Route::put('/employees/{id}', [EmployeeController::class, 'update']);
+
+  Route::get('/ratings', [RatingController::class, 'index']);
+  Route::get('/ratings/{id}', [RatingController::class, 'show']);
+
+  Route::get('/resources', [ResourceController::class, 'index']); //display
+  Route::post('/resources', [ResourceController::class, 'store']);
+  Route::put('/resources/{id}', [ResourceController::class, 'update']);
+  Route::delete('/resources/{id}', [ResourceController::class, 'destroy']);
+
+  Route::get('/promos', [PromoController::class, 'index']);
+  Route::post('/promos', [PromoController::class, 'store']);
+  Route::put('/promos/{id}', [PromoController::class, 'update']);
+  Route::delete('/promos/{id}', [PromoController::class, 'destroy']);
 });
+Route::redirect('/admin', '/admin/dashboard');

@@ -12,6 +12,11 @@ class CustomerController extends Controller {
     return view('admin.customers', compact('customers'));
   }
 
+  public function show($id) {
+    $user = User::findOrFail($id);
+    return view('admin.customer-profile', compact('user'));
+  }
+
   public function update(Request $request, $id) {
     $customer = User::findOrFail($id);
 

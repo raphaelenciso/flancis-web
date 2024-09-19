@@ -168,7 +168,7 @@ exit();
               aria-expanded="false">
               <img
                 class="img-profile rounded-circle"
-                src="../images/user-placeholder.jpg" />
+                src="{{ Auth::user()->picture ? asset('images/customer-pictures/' . Auth::user()->picture) : asset('images/user-placeholder.png') }}" />
             </a>
             <!-- Dropdown - User Information -->
             <div

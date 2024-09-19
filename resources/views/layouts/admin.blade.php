@@ -60,9 +60,13 @@
         </div>
       </li>
 
-
-
-
+      <!-- Add this new item -->
+      <li class="nav-item">
+        <a class="nav-link" href="/admin/resources">
+          <i class="fas fa-fw fa-boxes"></i>
+          <span>Resources</span>
+        </a>
+      </li>
 
       <!-- Nav Item - Customer Collapse Menu -->
 
@@ -73,7 +77,27 @@
         </a>
       </li>
 
+      <li class="nav-item">
+        <a class="nav-link" href="/admin/employees">
+          <i class="fas fa-fw fa-user-tie"></i>
+          <span>Employees</span>
+        </a>
+      </li>
 
+      <li class="nav-item">
+        <a class="nav-link" href="/admin/ratings">
+          <i class="fas fa-fw fa-star"></i>
+          <span>Ratings</span>
+        </a>
+      </li>
+
+      <!-- Add this new item in the sidebar -->
+      <li class="nav-item">
+        <a class="nav-link" href="/admin/promos">
+          <i class="fas fa-fw fa-percent"></i>
+          <span>Promos</span>
+        </a>
+      </li>
 
       <!-- Divider -->
       <hr class="sidebar-divider d-none d-md-block" />
@@ -188,16 +212,12 @@
               aria-expanded="false">
               <img
                 class="img-profile rounded-circle"
-                src="../images/user-placeholder.jpg" />
+                src="{{ Auth::user()->picture ? asset('images/customer-pictures/' . Auth::user()->picture) : asset('images/user-placeholder.png') }}" />
             </a>
             <!-- Dropdown - User Information -->
             <div
               class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
               aria-labelledby="userDropdown">
-              <a class="dropdown-item" href="/customer/profile">
-                <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                Profile
-              </a>
               <a
                 class="dropdown-item"
                 href="#"
