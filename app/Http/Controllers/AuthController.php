@@ -86,8 +86,8 @@ class AuthController extends Controller {
     $user = User::where('username', $request->username)->first();
 
     if ($user && Hash::check($request->password, $user->password)) {
+      auth()->login($user);
       if ($user->role === 'customer') {
-        auth()->login($user);
         return redirect('/customer/home');
       } else {
         return redirect('/admin/dashboard');

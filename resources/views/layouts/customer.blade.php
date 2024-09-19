@@ -40,7 +40,7 @@ exit();
       <hr class="sidebar-divider my-0" />
 
       <!-- Nav Item - Dashboard -->
-      <li class="nav-item">
+      <li class="nav-item {{ Request::is('customer/home') ? 'active' : '' }}">
         <a class="nav-link" href="/customer/home">
           <i class="fas fa-fw fa-tachometer-alt"></i>
           <span>Home</span>
@@ -48,7 +48,7 @@ exit();
       </li>
 
       <!-- Nav Item - Activities -->
-      <li class="nav-item">
+      <li class="nav-item {{ Request::is('customer/activities') ? 'active' : '' }}">
         <a class="nav-link" href="/customer/activities">
           <i class="fas fa-fw fa-scroll"></i>
           <span>Activities</span>
@@ -95,7 +95,7 @@ exit();
           </li>
 
           <!-- Nav Item - Alerts -->
-          <li class="nav-item dropdown no-arrow mx-1">
+          {{-- <li class="nav-item dropdown no-arrow mx-1">
             <a
               class="nav-link dropdown-toggle"
               href="#"
@@ -112,7 +112,7 @@ exit();
             <div
               class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
               aria-labelledby="alertsDropdown">
-              <h6 class="dropdown-header">Alerts Center</h6>
+              <h6 class="dropdown-header">Notifications</h6>
               <a class="dropdown-item d-flex align-items-center" href="#">
                 <div class="mr-3">
                   <div class="icon-circle bg-primary">
@@ -151,10 +151,10 @@ exit();
                 class="dropdown-item text-center small text-gray-500"
                 href="#">Show All Alerts</a>
             </div>
-          </li>
+          </li> --}}
 
 
-          <div class="topbar-divider d-none d-sm-block"></div>
+          {{-- <div class="topbar-divider d-none d-sm-block"></div> --}}
 
           <!-- Nav Item - User Information -->
           <li class="nav-item dropdown no-arrow">

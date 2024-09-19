@@ -77,4 +77,12 @@ class User extends Authenticatable {
     'birthday' => 'date',
     'password' => 'hashed',
   ];
+
+  public function notifications() {
+    return $this->hasMany(Notification::class, 'user_id', 'user_id');
+  }
+
+  public function unreadNotifications() {
+    return $this->notifications()->where('is_read', false);
+  }
 }

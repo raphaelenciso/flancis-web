@@ -46,30 +46,42 @@ function getStatusClass($status) {
     <!-- Left Column -->
     <div class="col-lg-8 mb-4">
       <!-- Promo Carousel -->
-      @if(count($promos) > 0)
       <div id="promoCarousel" class="carousel slide" data-ride="carousel">
         <ol class="carousel-indicators">
-          @foreach($promos as $index => $promo)
-            <li data-target="#promoCarousel" data-slide-to="{{ $index }}" class="{{ $index == 0 ? 'active' : '' }}"></li>
-          @endforeach
+          @if(count($promos) > 0)
+            @foreach($promos as $index => $promo)
+              <li data-target="#promoCarousel" data-slide-to="{{ $index }}" class="{{ $index == 0 ? 'active' : '' }}"></li>
+            @endforeach
+          @else
+            <li data-target="#promoCarousel" data-slide-to="0" class="active"></li>
+          @endif
         </ol>
         <div class="carousel-inner">
-          @foreach($promos as $index => $promo)
-          <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
-            <img src="{{ asset($promo->image) }}" class="d-block w-100" alt="{{ $promo->promo_name }}">
-            <div class="carousel-caption d-none d-md-block">
-              <h5>{{ $promo->promo_name }}</h5>
-              <p class="promo-details">
-                <span class="discount">{{ $promo->percent_discount }}% OFF</span>
-                <span class="dates">
-                  <i class="fas fa-calendar-alt"></i> 
-                  {{ $promo->start_date->format('M j') }} - {{ $promo->end_date->format('M j, Y') }}
-                </span>
-              </p>
-              <a href="/customer/book-appointment" class="btn btn-primary">Book Now</a>
+          @if(count($promos) > 0)
+            @foreach($promos as $index => $promo)
+            <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
+              <img src="{{ asset($promo->image) }}" class="d-block w-100" alt="{{ $promo->promo_name }}">
+              <div class="carousel-caption d-none d-md-block">
+                <h5>{{ $promo->promo_name }}</h5>
+                <p class="promo-details">
+                  <span class="discount">{{ $promo->percent_discount }}% OFF</span>
+                  <span class="dates">
+                    <i class="fas fa-calendar-alt"></i> 
+                    {{ $promo->start_date->format('M j') }} - {{ $promo->end_date->format('M j, Y') }}
+                  </span>
+                </p>
+                <a href="/customer/book-appointment" class="btn btn-primary">Book Now</a>
+              </div>
             </div>
-          </div>
-        @endforeach
+            @endforeach
+          @else
+            <div class="carousel-item active">
+              <div class="no-promos-slide">
+                <h5>No Promos Available</h5>
+                <p>Check back later for exciting promotions!</p>
+              </div>
+            </div>
+          @endif
         </div>
         <a class="carousel-control-prev" href="#promoCarousel" role="button" data-slide="prev">
           <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -80,14 +92,6 @@ function getStatusClass($status) {
           <span class="sr-only">Next</span>
         </a>
       </div>
-      @else
-      <div class="no-promos-card">
-        <div class="card-body text-center">
-          <h5 class="card-title">No Promos Available</h5>
-          <p class="card-text">Check back later for exciting promotions!</p>
-        </div>
-      </div>
-      @endif
 
       <!-- Book a Service Card -->
       <div class="row mt-4">
@@ -138,11 +142,97 @@ function getStatusClass($status) {
           </div>
         </div>
       </div>
+
+      <!-- Top Services Card -->
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Top Services</h6>
+        </div>
+        <div class="card-body">
+          @php
+          $colors = ['danger', 'success', 'warning', 'info', 'primary'];
+          $colorIndex = 0;
+          @endphp
+          @foreach($topServices as $service)
+          @php
+          $name = $service->name;
+          $rating = round($service->avg_rating, 1);
+          $ratingCount = $service->rating_count;
+          $color = $colors[$colorIndex % count($colors)];
+          $width = $rating * 20;
+
+          $fullStars = floor($rating);
+          $halfStar = $rating - $fullStars >= 0.5 ? 1 : 0;
+          $emptyStars = 5 - $fullStars - $halfStar;
+
+          $stars = str_repeat('<i class="fas fa-star text-warning"></i>', $fullStars);
+          $stars .= $halfStar ? '<i class="fas fa-star-half-alt text-warning"></i>' : '';
+          $stars .= str_repeat('<i class="far fa-star text-warning"></i>', $emptyStars);
+
+          $colorIndex++;
+          @endphp
+          <h4 class="small font-weight-bold text-{{ $color }}">
+            {{ $name }} <span class="float-right">{!! $stars !!} ({{ $rating }}) - {{ $ratingCount }} ratings</span>
+          </h4>
+          <div class="progress mb-4">
+            <div class="progress-bar bg-{{ $color }}" role="progressbar" style="width: {{ $width }}%"
+              aria-valuenow="{{ $width }}" aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+          @endforeach
+        </div>
+      </div>
     </div>
 
-    <!-- Recent Activities Card -->
+    <!-- Right Column -->
     <div class="col-lg-4 mb-4">
-      <div class="card shadow h-100">
+      <!-- Service Types Carousel -->
+      <div id="serviceTypeCarousel" class="carousel slide" data-ride="carousel">
+        <div class="service-label">Our Services</div>
+        <ol class="carousel-indicators">
+          @if(count($serviceTypes) > 0)
+            @foreach($serviceTypes as $index => $serviceType)
+              <li data-target="#serviceTypeCarousel" data-slide-to="{{ $index }}" class="{{ $index == 0 ? 'active' : '' }}"></li>
+            @endforeach
+          @else
+            <li data-target="#serviceTypeCarousel" data-slide-to="0" class="active"></li>
+          @endif
+        </ol>
+        <div class="carousel-inner">
+          @if(count($serviceTypes) > 0)
+            @foreach($serviceTypes as $index => $serviceType)
+            <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
+              <img src="{{ asset($serviceType->service_image) }}" class="d-block w-100" alt="{{ $serviceType->service_type }}">
+              <div class="carousel-caption d-none d-md-block">
+                <h5>{{ $serviceType->service_type }}</h5>
+                <p>
+                  @foreach($serviceType->services as $service)
+                    <span class="badge badge-light">{{ $service->service_name }}</span>
+                  @endforeach
+                </p>
+              </div>
+            </div>
+            @endforeach
+          @else
+            <div class="carousel-item active">
+              <div class="no-services-slide">
+                <h5>Our Services</h5>
+                <p>No services available at the moment.</p>
+              </div>
+            </div>
+          @endif
+        </div>
+        <a class="carousel-control-prev" href="#serviceTypeCarousel" role="button" data-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#serviceTypeCarousel" role="button" data-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="sr-only">Next</span>
+        </a>
+      </div>
+
+      <!-- Recent Activities Card -->
+      <div class="card shadow  mt-4">
         <div class="card-header py-3">
           <h6 class="m-0 font-weight-bold text-primary">Recent Activities</h6>
         </div>
@@ -184,6 +274,9 @@ function getStatusClass($status) {
   $(document).ready(function() {
     $('#promoCarousel').carousel({
       interval: 5000
+    });
+    $('#serviceTypeCarousel').carousel({
+      interval: 3000
     });
   });
 </script>

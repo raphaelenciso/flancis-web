@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\RatingController;
 use App\Http\Controllers\Admin\ResourceController;
 use App\Http\Controllers\Admin\PromoController;
+use App\Http\Controllers\Admin\CalendarController;
+use App\Http\Controllers\Admin\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -102,5 +104,10 @@ Route::prefix('/admin')->group(function () {
   Route::post('/promos', [PromoController::class, 'store']);
   Route::put('/promos/{id}', [PromoController::class, 'update']);
   Route::delete('/promos/{id}', [PromoController::class, 'destroy']);
+
+  Route::get('/calendar', [CalendarController::class, 'index']);
+  Route::get('/appointments/date/{date}', [CalendarController::class, 'getAppointmentsByDate']);
+
+  Route::post('/notifications/mark-as-read', [NotificationController::class, 'markAsRead']);
 });
 Route::redirect('/admin', '/admin/dashboard');

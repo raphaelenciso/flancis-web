@@ -7,7 +7,9 @@ use App\Models\User;
 use App\Models\Appointment;
 use App\Models\Employee;
 use App\Models\Service;
+use App\Models\Notification; // Add this line
 use Illuminate\Support\Facades\DB;
+use App\Models\ServiceType; // Assuming ServiceType model is defined
 
 class DashboardController extends Controller {
   public function index() {
@@ -35,13 +37,39 @@ class DashboardController extends Controller {
       ->orderBy('appointment_time')
       ->get();
 
+    $monthlySales = Appointment::where('appointments_tbl.status', 'completed')
+      ->join('services_tbl', 'appointments_tbl.service_id', '=', 'services_tbl.service_id')
+      ->select(DB::raw('MONTH(appointments_tbl.appointment_date) as month'), DB::raw('SUM(services_tbl.price) as total'))
+      ->whereYear('appointments_tbl.appointment_date', date('Y'))
+      ->groupBy('month')
+      ->orderBy('month')
+      ->pluck('total', 'month')
+      ->toArray();
+
+    $monthlyData = array_replace(array_fill(1, 12, 0), $monthlySales);
+
+    $serviceTypeRevenue = ServiceType::select('service_types_tbl.service_type_id', 'service_types_tbl.service_type')
+      ->join('services_tbl', 'service_types_tbl.service_type_id', '=', 'services_tbl.service_type_id')
+      ->join('appointments_tbl', 'services_tbl.service_id', '=', 'appointments_tbl.service_id')
+      ->where('appointments_tbl.status', 'completed')
+      ->groupBy('service_types_tbl.service_type_id', 'service_types_tbl.service_type')
+      ->selectRaw('COUNT(appointments_tbl.appointment_id) as appointment_count')
+      ->orderByDesc('appointment_count')
+      ->get();
+
+    // Fetch notifications for the authenticated user
+    $notifications = Notification::where('user_id', auth()->id())->where('is_read', false)->get();
+
     return view('admin.dashboard', compact(
       'totalCustomers',
       'totalSales',
       'totalEmployees',
       'totalAppointments',
       'topServices',
-      'todayAppointments'
+      'todayAppointments',
+      'monthlyData',
+      'serviceTypeRevenue',
+      'notifications' // Add this line
     ));
   }
 }

@@ -2,7 +2,6 @@
 
 @section('styles')
 <!-- DataTables CSS -->
-<link href="{{ asset('vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
 <style>
   /* Custom styles for appointment details */
   #appointmentDetails p {
@@ -22,53 +21,316 @@
 <p class="mb-4">Manage your appointments here.</p>
 
 <div class="card shadow mb-4">
-  <div class="card-header py-3 d-flex justify-content-between align-items-center">
-    <h6 class="m-0 font-weight-bold text-primary">All Appointments</h6>
+  <div class="card-header py-3">
+    <ul class="nav nav-tabs card-header-tabs">
+      <li class="nav-item">
+        <a class="nav-link active" href="#all" data-toggle="tab">All</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#pending" data-toggle="tab">Pending</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#confirmed" data-toggle="tab">Confirmed</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#rejected" data-toggle="tab">Rejected</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#cancelled" data-toggle="tab">Cancelled</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#completed" data-toggle="tab">Completed</a>
+      </li>
+    </ul>
   </div>
   <div class="card-body">
-    <div class="table-responsive">
-      <table class="table table-bordered" id="appointmentsTable" width="100%" cellspacing="0">
-        <thead>
-          <tr>
-            <th>Appointment ID</th>
-            <th>User</th>
-            <th>Date</th>
-            <th>Time</th>
-            <th>Service</th>
-            <th>Payment Type</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          @foreach ($appointments as $appointment)
-          <tr>
-            <td>{{ $appointment->appointment_id }}</td>
-            <td>{{ $appointment->user->first_name . ' ' . $appointment->user->last_name }}</td>
-            <td>{{ \Carbon\Carbon::parse($appointment->appointment_date)->format('Y-m-d') }}</td>
-            <td>{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('g:i A') }}</td>
-            <td>{{ $appointment->service->service_name }}</td>
-            <td>{{ $appointment->payment_type }}</td>
-            <td>
-              @php
-              $statusClass = match($appointment->status) {
-              'pending' => 'warning',
-              'confirmed' => 'success',
-              'rejected', 'cancelled' => 'danger',
-              'completed' => 'info',
-              default => 'secondary'
-              };
-              @endphp
-              <span class="badge badge-{{ $statusClass }}">{{ ucfirst($appointment->status) }}</span>
-            </td>
-            <td>
-              <button class="btn btn-sm btn-info view-appointment-btn" data-id="{{ $appointment->appointment_id }}">View</button>
-              <button class="btn btn-sm btn-primary edit-appointment-btn" data-id="{{ $appointment->appointment_id }}">Update</button>
-            </td>
-          </tr>
-          @endforeach
-        </tbody>
-      </table>
+    <div class="tab-content">
+      <div class="tab-pane fade show active" id="all">
+        <div class="table-responsive">
+          <table class="table table-bordered" id="appointmentsTable" width="100%" cellspacing="0">
+            <thead>
+              <tr>
+                <th>Appointment ID</th>
+                <th>User</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Service</th>
+                <th>Payment Type</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              @foreach ($appointments as $appointment)
+              <tr>
+                <td>{{ $appointment->appointment_id }}</td>
+                <td>{{ $appointment->user->first_name . ' ' . $appointment->user->last_name }}</td>
+                <td>{{ \Carbon\Carbon::parse($appointment->appointment_date)->format('Y-m-d') }}</td>
+                <td>{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('g:i A') }}</td>
+                <td>{{ $appointment->service->service_name }}</td>
+                <td>{{ $appointment->payment_type }}</td>
+                <td>
+                  @php
+                  $statusClass = match($appointment->status) {
+                  'pending' => 'warning',
+                  'confirmed' => 'success',
+                  'rejected', 'cancelled' => 'danger',
+                  'completed' => 'info',
+                  default => 'secondary'
+                  };
+                  @endphp
+                  <span class="badge badge-{{ $statusClass }}">{{ ucfirst($appointment->status) }}</span>
+                </td>
+                <td>
+                  <button class="btn btn-sm btn-info view-appointment-btn" data-id="{{ $appointment->appointment_id }}">View</button>
+                  <button class="btn btn-sm btn-primary edit-appointment-btn" data-id="{{ $appointment->appointment_id }}">Update</button>
+                </td>
+              </tr>
+              @endforeach
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="pending">
+        <div class="table-responsive">
+          <table class="table table-bordered" id="pendingTable" width="100%" cellspacing="0">
+            <thead>
+              <tr>
+                <th>Appointment ID</th>
+                <th>User</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Service</th>
+                <th>Payment Type</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              @foreach ($appointments as $appointment)
+              @if ($appointment->status === 'pending')
+              <tr>
+                <td>{{ $appointment->appointment_id }}</td>
+                <td>{{ $appointment->user->first_name . ' ' . $appointment->user->last_name }}</td>
+                <td>{{ \Carbon\Carbon::parse($appointment->appointment_date)->format('Y-m-d') }}</td>
+                <td>{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('g:i A') }}</td>
+                <td>{{ $appointment->service->service_name }}</td>
+                <td>{{ $appointment->payment_type }}</td>
+                <td>
+                  @php
+                  $statusClass = match($appointment->status) {
+                  'pending' => 'warning',
+                  'confirmed' => 'success',
+                  'rejected', 'cancelled' => 'danger',
+                  'completed' => 'info',
+                  default => 'secondary'
+                  };
+                  @endphp
+                  <span class="badge badge-{{ $statusClass }}">{{ ucfirst($appointment->status) }}</span>
+                </td>
+                <td>
+                  <button class="btn btn-sm btn-info view-appointment-btn" data-id="{{ $appointment->appointment_id }}">View</button>
+                  <button class="btn btn-sm btn-primary edit-appointment-btn" data-id="{{ $appointment->appointment_id }}">Update</button>
+                </td>
+              </tr>
+              @endif
+              @endforeach
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="confirmed">
+        <div class="table-responsive">
+          <table class="table table-bordered" id="confirmedTable" width="100%" cellspacing="0">
+            <thead>
+              <tr>
+                <th>Appointment ID</th>
+                <th>User</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Service</th>
+                <th>Payment Type</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              @foreach ($appointments as $appointment)
+              @if ($appointment->status === 'confirmed')
+              <tr>
+                <td>{{ $appointment->appointment_id }}</td>
+                <td>{{ $appointment->user->first_name . ' ' . $appointment->user->last_name }}</td>
+                <td>{{ \Carbon\Carbon::parse($appointment->appointment_date)->format('Y-m-d') }}</td>
+                <td>{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('g:i A') }}</td>
+                <td>{{ $appointment->service->service_name }}</td>
+                <td>{{ $appointment->payment_type }}</td>
+                <td>
+                  @php
+                  $statusClass = match($appointment->status) {
+                  'pending' => 'warning',
+                  'confirmed' => 'success',
+                  'rejected', 'cancelled' => 'danger',
+                  'completed' => 'info',
+                  default => 'secondary'
+                  };
+                  @endphp
+                  <span class="badge badge-{{ $statusClass }}">{{ ucfirst($appointment->status) }}</span>
+                </td>
+                <td>
+                  <button class="btn btn-sm btn-info view-appointment-btn" data-id="{{ $appointment->appointment_id }}">View</button>
+                  <button class="btn btn-sm btn-primary edit-appointment-btn" data-id="{{ $appointment->appointment_id }}">Update</button>
+                </td>
+              </tr>
+              @endif
+              @endforeach
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="rejected">
+        <div class="table-responsive">
+          <table class="table table-bordered" id="rejectedTable" width="100%" cellspacing="0">
+            <thead>
+              <tr>
+                <th>Appointment ID</th>
+                <th>User</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Service</th>
+                <th>Payment Type</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              @foreach ($appointments as $appointment)
+              @if ($appointment->status === 'rejected')
+              <tr>
+                <td>{{ $appointment->appointment_id }}</td>
+                <td>{{ $appointment->user->first_name . ' ' . $appointment->user->last_name }}</td>
+                <td>{{ \Carbon\Carbon::parse($appointment->appointment_date)->format('Y-m-d') }}</td>
+                <td>{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('g:i A') }}</td>
+                <td>{{ $appointment->service->service_name }}</td>
+                <td>{{ $appointment->payment_type }}</td>
+                <td>
+                  @php
+                  $statusClass = match($appointment->status) {
+                  'pending' => 'warning',
+                  'confirmed' => 'success',
+                  'rejected', 'cancelled' => 'danger',
+                  'completed' => 'info',
+                  default => 'secondary'
+                  };
+                  @endphp
+                  <span class="badge badge-{{ $statusClass }}">{{ ucfirst($appointment->status) }}</span>
+                </td>
+                <td>
+                  <button class="btn btn-sm btn-info view-appointment-btn" data-id="{{ $appointment->appointment_id }}">View</button>
+                  <button class="btn btn-sm btn-primary edit-appointment-btn" data-id="{{ $appointment->appointment_id }}">Update</button>
+                </td>
+              </tr>
+              @endif
+              @endforeach
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="cancelled">
+        <div class="table-responsive">
+          <table class="table table-bordered" id="cancelledTable" width="100%" cellspacing="0">
+            <thead>
+              <tr>
+                <th>Appointment ID</th>
+                <th>User</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Service</th>
+                <th>Payment Type</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              @foreach ($appointments as $appointment)
+              @if ($appointment->status === 'cancelled')
+              <tr>
+                <td>{{ $appointment->appointment_id }}</td>
+                <td>{{ $appointment->user->first_name . ' ' . $appointment->user->last_name }}</td>
+                <td>{{ \Carbon\Carbon::parse($appointment->appointment_date)->format('Y-m-d') }}</td>
+                <td>{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('g:i A') }}</td>
+                <td>{{ $appointment->service->service_name }}</td>
+                <td>{{ $appointment->payment_type }}</td>
+                <td>
+                  @php
+                  $statusClass = match($appointment->status) {
+                  'pending' => 'warning',
+                  'confirmed' => 'success',
+                  'rejected', 'cancelled' => 'danger',
+                  'completed' => 'info',
+                  default => 'secondary'
+                  };
+                  @endphp
+                  <span class="badge badge-{{ $statusClass }}">{{ ucfirst($appointment->status) }}</span>
+                </td>
+                <td>
+                  <button class="btn btn-sm btn-info view-appointment-btn" data-id="{{ $appointment->appointment_id }}">View</button>
+                  <button class="btn btn-sm btn-primary edit-appointment-btn" data-id="{{ $appointment->appointment_id }}">Update</button>
+                </td>
+              </tr>
+              @endif
+              @endforeach
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="completed">
+        <div class="table-responsive">
+          <table class="table table-bordered" id="completedTable" width="100%" cellspacing="0">
+            <thead>
+              <tr>
+                <th>Appointment ID</th>
+                <th>User</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Service</th>
+                <th>Payment Type</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              @foreach ($appointments as $appointment)
+              @if ($appointment->status === 'completed')
+              <tr>
+                <td>{{ $appointment->appointment_id }}</td>
+                <td>{{ $appointment->user->first_name . ' ' . $appointment->user->last_name }}</td>
+                <td>{{ \Carbon\Carbon::parse($appointment->appointment_date)->format('Y-m-d') }}</td>
+                <td>{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('g:i A') }}</td>
+                <td>{{ $appointment->service->service_name }}</td>
+                <td>{{ $appointment->payment_type }}</td>
+                <td>
+                  @php
+                  $statusClass = match($appointment->status) {
+                  'pending' => 'warning',
+                  'confirmed' => 'success',
+                  'rejected', 'cancelled' => 'danger',
+                  'completed' => 'info',
+                  default => 'secondary'
+                  };
+                  @endphp
+                  <span class="badge badge-{{ $statusClass }}">{{ ucfirst($appointment->status) }}</span>
+                </td>
+                <td>
+                  <button class="btn btn-sm btn-info view-appointment-btn" data-id="{{ $appointment->appointment_id }}">View</button>
+                  <button class="btn btn-sm btn-primary edit-appointment-btn" data-id="{{ $appointment->appointment_id }}">Update</button>
+                </td>
+              </tr>
+              @endif
+              @endforeach
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -141,7 +403,22 @@
 
 <script>
   $(document).ready(function() {
-    $('#appointmentsTable').DataTable();
+    var allTable = $('#appointmentsTable').DataTable();
+    var pendingTable = $('#pendingTable').DataTable();
+    var confirmedTable = $('#confirmedTable').DataTable();
+    var rejectedTable = $('#rejectedTable').DataTable();
+    var cancelledTable = $('#cancelledTable').DataTable();
+    var completedTable = $('#completedTable').DataTable();
+    
+    // Filter table based on status when tab is clicked
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+      var status = $(e.target).attr("href").substr(1);
+      if (status === 'all') {
+        table.column(6).search('').draw();
+      } else {
+        table.column(6).search(status).draw();
+      }
+    });
 
     // View Appointment
     $(document).on('click', '.view-appointment-btn', function() {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Appointment;
+use App\Models\Notification; // Add this line
 use Illuminate\Http\Request;
 use App\Models\Service;
 use App\Models\ServiceType;
@@ -11,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Jobs\SendAppointmentReminder;
 use App\Mail\AppointmentConfirmation;
 use Illuminate\Support\Facades\Mail;
+use App\Models\User; // Added for fetching admin users
 
 class BookAppointmentController extends Controller {
   public function index() {
@@ -65,6 +67,19 @@ class BookAppointmentController extends Controller {
 
     // Send confirmation email
     Mail::to(Auth::user()->email)->send(new AppointmentConfirmation($appointment));
+
+    // Fetch all admin users
+    $adminUsers = User::where('role', 'admin')->get();
+
+    // Create notifications for all admin users
+    foreach ($adminUsers as $admin) {
+      Notification::create([
+        'user_id' => $admin->user_id,
+        'title' => 'New Appointment Booked',
+        'message' => Auth::user()->username . ' booked an appointment.',
+        'route' => '/admin/appointments',
+      ]);
+    }
 
     return redirect('/customer/book-appointment')
       ->with('success', 'Appointment booked successfully. A confirmation email has been sent, and a reminder email will be sent shortly.');
