@@ -12,12 +12,15 @@ use Illuminate\Support\Facades\Storage;
 
 class AppointmentController extends Controller {
   public function index() {
-    $appointments = Appointment::with(['user', 'service'])->orderBy('appointment_date', 'desc')->orderBy('appointment_time', 'desc')->get();
+    $appointments = Appointment::with(['user', 'service', 'promo'])
+      ->orderBy('appointment_date', 'desc')
+      ->orderBy('appointment_time', 'desc')
+      ->get();
     return view('admin.appointments', compact('appointments'));
   }
 
   public function show($id) {
-    $appointment = Appointment::with(['user', 'service'])->findOrFail($id);
+    $appointment = Appointment::with(['user', 'service', 'promo'])->findOrFail($id);
     return response()->json($appointment);
   }
 

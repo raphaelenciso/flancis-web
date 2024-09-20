@@ -10,11 +10,11 @@ class DatabaseSeeder extends Seeder {
       UsersTableSeeder::class,
       ServiceTypesTableSeeder::class,
       ServicesTableSeeder::class,
+      PromosTableSeeder::class,
       AppointmentsTableSeeder::class,
       ServiceRatingsTableSeeder::class,
       ResourcesTableSeeder::class,
       EmployeesTableSeeder::class,
-      PromosTableSeeder::class,
     ]);
   }
 }

@@ -11,7 +11,7 @@ use App\Models\ServiceRating;
 class ActivitiesController extends Controller {
   public function index() {
     $user_id = Auth::id();
-    $appointments = Appointment::with(['service.serviceType'])
+    $appointments = Appointment::with(['service.serviceType', 'promo'])
       ->where('user_id', $user_id)
       ->orderByDesc('appointment_date')
       ->orderByDesc('appointment_time')

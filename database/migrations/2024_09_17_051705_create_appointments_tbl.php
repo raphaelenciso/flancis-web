@@ -22,10 +22,13 @@ return new class extends Migration {
       $table->text('admin_note')->nullable();
       $table->boolean('is_rated')->default(false);
       $table->string('proof', 100);
+      $table->decimal('price', 10, 2);
+      $table->string('promo_id', 36)->nullable();
       $table->timestamps();
 
       $table->foreign('user_id')->references('user_id')->on('users_tbl')->onDelete('cascade');
       $table->foreign('service_id')->references('service_id')->on('services_tbl')->onDelete('cascade');
+      $table->foreign('promo_id')->references('promo_id')->on('promos_tbl')->onDelete('set null');
     });
 
     DB::statement('ALTER TABLE appointments_tbl MODIFY appointment_id CHAR(16) NOT NULL DEFAULT (SUBSTRING(MD5(RAND()) FROM 1 FOR 16))');

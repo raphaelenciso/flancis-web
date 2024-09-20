@@ -29,7 +29,7 @@ exit();
     <!-- Start of Sidebar  -->
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
       <!-- Sidebar - Brand -->
-      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="home.php">
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/customer/home">
         <div class="sidebar-brand-icon">
           <img src="{{ asset('images/logo-transparent.png') }}" alt="Flanci's Admin Logo" width="80" height="80" class="img-fluid">
         </div>

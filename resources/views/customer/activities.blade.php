@@ -24,7 +24,6 @@ return 'secondary';
 }
 }
 }
-
 @endphp
 
 
@@ -96,6 +95,15 @@ return 'secondary';
                     <p class="card-text">
                       <span class="badge badge-{{ getStatusClass($appointment->status) }} mb-2">{{ $appointment->status }}</span><br>
                       <strong>Payment:</strong> {{ $appointment->payment_type }}<br>
+                      <strong>Price:</strong>
+                      @if($appointment->promo)
+                      <span class="text-muted text-decoration-line-through"><s> ₱{{ number_format($appointment->service->price, 2) }}</s></span>
+                      <span class="text-success font-weight-bold">₱{{ number_format($appointment->price, 2) }}</span>
+                      <span class="badge badge-success">{{ $appointment->promo->promo_name }}</span>
+                      @else
+                      ₱{{ number_format($appointment->price, 2) }}
+                      @endif
+                      <br>
                       <strong>Remarks:</strong> {{ $appointment->remarks }}
                     </p>
                   </div>

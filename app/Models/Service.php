@@ -38,4 +38,9 @@ class Service extends Model {
   public function serviceRatings() {
     return $this->hasMany(ServiceRating::class, 'service_id', 'service_id');
   }
+
+  // Add this new relationship
+  public function promos() {
+    return $this->belongsToMany(Promo::class, 'promo_service_tbl', 'service_id', 'promo_id');
+  }
 }

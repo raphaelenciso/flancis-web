@@ -11,7 +11,7 @@ return new class extends Migration {
    */
   public function up(): void {
     Schema::create('promos_tbl', function (Blueprint $table) {
-      $table->string('promo_id')->primary();
+      $table->string('promo_id', 36)->primary();
       $table->string('promo_name', 100);
       $table->string('image', 255)->nullable();
       $table->decimal('percent_discount', 5, 2);

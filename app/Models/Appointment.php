@@ -24,12 +24,15 @@ class Appointment extends Model {
     'admin_note',
     'is_rated',
     'proof',
+    'price',
+    'promo_id',
   ];
 
   protected $casts = [
     'appointment_date' => 'date',
     'appointment_time' => 'datetime',
     'is_rated' => 'boolean',
+    'price' => 'decimal:2',
   ];
 
   public function user() {
@@ -42,5 +45,9 @@ class Appointment extends Model {
 
   public function serviceRating() {
     return $this->hasOne(ServiceRating::class, 'appointment_id', 'appointment_id');
+  }
+
+  public function promo() {
+    return $this->belongsTo(Promo::class, 'promo_id', 'promo_id');
   }
 }

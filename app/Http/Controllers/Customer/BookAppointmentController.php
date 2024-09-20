@@ -13,11 +13,15 @@ use App\Jobs\SendAppointmentReminder;
 use App\Mail\AppointmentConfirmation;
 use Illuminate\Support\Facades\Mail;
 use App\Models\User; // Added for fetching admin users
+use Illuminate\Support\Facades\Validator; // Added for validation
 
 class BookAppointmentController extends Controller {
   public function index() {
     $serviceTypes = ServiceType::where('status', 'active')->get();
-    $services = Service::with('serviceType')
+    $services = Service::with(['serviceType', 'promos' => function ($query) {
+      $query->where('start_date', '<=', now())
+        ->where('end_date', '>=', now());
+    }])
       ->where('status', 'active')
       ->whereHas('serviceType', function ($query) {
         $query->where('status', 'active');
@@ -28,15 +32,22 @@ class BookAppointmentController extends Controller {
   }
 
   public function store(Request $request) {
-    $request->validate([
+    $validator = Validator::make($request->all(), [
       'appointment_date' => 'required|date',
       'appointment_time' => 'required',
       'service_id' => 'required|exists:services_tbl,service_id',
       'payment_type' => 'required|in:cash,gcash,bank_transfer',
       'remarks' => 'nullable|string',
       'proof' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+      'price' => 'required|numeric',
+      'promo_id' => 'nullable|exists:promos_tbl,promo_id',
     ]);
 
+    if ($validator->fails()) {
+      return redirect()->back()
+        ->withErrors($validator)
+        ->withInput();
+    }
 
     $userId = Auth::id();
 
@@ -58,6 +69,8 @@ class BookAppointmentController extends Controller {
       'remarks' => $request->remarks,
       'status' => 'pending',
       'proof' => $proofPath,
+      'price' => $request->price,
+      'promo_id' => $request->promo_id,
     ]);
 
     $appointment->save();

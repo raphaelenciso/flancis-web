@@ -17,6 +17,8 @@ class AppointmentsTableSeeder extends Seeder {
       'remarks' => 'Nail Art',
       'status' => 'completed',
       'admin_note' => null,
+      'price' => 150.00,
+      'promo_id' => null,
       'is_rated' => 1,
       'proof' => 'images/appointment-proofs/1726673138_e79dd102b35213f815291e0fb4bd12df.jpg',
       'created_at' => '2024-09-18 07:25:38',

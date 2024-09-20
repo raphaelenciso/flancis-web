@@ -32,6 +32,15 @@
         @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
         @endif
+        @if ($errors->any())
+        <div class="alert alert-danger">
+          <ul>
+            @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+            @endforeach
+          </ul>
+        </div>
+        @endif
         <form action={{ route('book-appointment.store') }} method="POST" enctype="multipart/form-data">
           @csrf
           <div class="form-group">
@@ -43,9 +52,9 @@
             <select class="form-control" id="appointment_time" name="appointment_time" required>
               <option value="">Select Time</option>
               @for($hour = 10; $hour <= 20; $hour++)
-                @for($minute = 0; $minute < 60; $minute += 5)
+                @for($minute=0; $minute < 60; $minute +=5)
                 @php
-                $ampm = $hour >= 12 ? 'PM' : 'AM';
+                $ampm=$hour>= 12 ? 'PM' : 'AM';
                 $hour12 = $hour > 12 ? $hour - 12 : ($hour == 0 ? 12 : $hour);
                 $time = sprintf("%02d:%02d %s", $hour12, $minute, $ampm);
                 $value = sprintf("%02d:%02d", $hour, $minute);
@@ -69,6 +78,20 @@
             <select class="form-control" id="service_id" name="service_id" required>
               <option value="">Select Service</option>
             </select>
+          </div>
+          <div class="form-group">
+            <label for="price">Full Price</label>
+            <input type="hidden" id="price" name="price">
+            <div id="displayed_price" class="form-control" readonly></div>
+          </div>
+          <div class="form-group">
+            <label for="downpayment">Downpayment (50%)</label>
+            <div id="displayed_downpayment" class="form-control" readonly></div>
+          </div>
+          <div class="form-group" id="promo_group" style="display: none;">
+            <label for="promo">Active Promo</label>
+            <input type="text" class="form-control" id="promo" name="promo" readonly>
+            <input type="hidden" id="promo_id" name="promo_id">
           </div>
           <div class="form-group">
             <label for="payment_type">Payment Type</label>
@@ -124,7 +147,7 @@
         qrCodeContainer.style.display = 'none';
       } else if (this.value === 'gcash') {
         bankOptions.style.display = 'none';
-        qrCodeImage.src = '{{ asset("images/qr-codes/qrcode-placeholder.webp") }}';
+        qrCodeImage.src = '{{ asset("images/payment-options/gcash-qr.png") }}';
         qrCodeContainer.style.display = 'block';
       } else {
         bankOptions.style.display = 'none';
@@ -134,6 +157,12 @@
 
     var serviceTypeSelect = document.getElementById('service_type_id');
     var serviceSelect = document.getElementById('service_id');
+    var priceInput = document.getElementById('price');
+    var displayedPrice = document.getElementById('displayed_price');
+    var displayedDownpayment = document.getElementById('displayed_downpayment');
+    var promoGroup = document.getElementById('promo_group');
+    var promoInput = document.getElementById('promo');
+    var promoIdInput = document.getElementById('promo_id');
     var services = @json($services);
 
     serviceTypeSelect.addEventListener('change', function() {
@@ -145,9 +174,64 @@
           var option = document.createElement('option');
           option.value = service.service_id;
           option.textContent = service.service_name;
+          option.dataset.price = service.price;
+
+          if (service.promos && service.promos.length > 0) {
+            var highestDiscount = Math.max(...service.promos.map(p => p.percent_discount));
+            option.dataset.promoId = service.promos[0].promo_id;
+            option.dataset.promoName = service.promos[0].promo_name;
+            option.dataset.promoDiscount = highestDiscount;
+            option.textContent += ` (${highestDiscount}% off)`;
+          } else {
+            option.dataset.promoId = '';
+            option.dataset.promoName = '';
+            option.dataset.promoDiscount = 0;
+          }
+
           serviceSelect.appendChild(option);
         }
       });
+    });
+
+    serviceSelect.addEventListener('change', function() {
+      var selectedOption = this.options[this.selectedIndex];
+      var servicePrice = parseFloat(selectedOption.dataset.price);
+      var promoId = selectedOption.dataset.promoId;
+      var promoName = selectedOption.dataset.promoName;
+      var promoDiscount = parseFloat(selectedOption.dataset.promoDiscount);
+
+      if (servicePrice) {
+        var downpayment = servicePrice * 0.5; // 50% downpayment
+
+        if (promoId && promoDiscount > 0) {
+          var discountAmount = servicePrice * (promoDiscount / 100);
+          var discountedPrice = servicePrice - discountAmount;
+          var discountedDownpayment = discountedPrice * 0.5;
+
+          promoGroup.style.display = 'block';
+          promoInput.value = promoName + ' (' + promoDiscount + '% off)';
+          promoIdInput.value = promoId;
+
+          displayedPrice.innerHTML = '<del>₱' + servicePrice.toFixed(2) + '</del> <span class="text-success">₱' + discountedPrice.toFixed(2) + '</span>';
+          displayedDownpayment.innerHTML = '<del>₱' + downpayment.toFixed(2) + '</del> <span class="text-success">₱' + discountedDownpayment.toFixed(2) + '</span>';
+          priceInput.value = discountedPrice.toFixed(2); // Save the discounted full price
+        } else {
+          promoGroup.style.display = 'none';
+          promoInput.value = '';
+          promoIdInput.value = '';
+
+          displayedPrice.textContent = '₱' + servicePrice.toFixed(2);
+          displayedDownpayment.textContent = '₱' + downpayment.toFixed(2);
+          priceInput.value = servicePrice.toFixed(2); // Save the original full price
+        }
+      } else {
+        priceInput.value = '';
+        displayedPrice.textContent = '';
+        displayedDownpayment.textContent = '';
+        promoGroup.style.display = 'none';
+        promoInput.value = '';
+        promoIdInput.value = '';
+      }
     });
   });
 
@@ -157,13 +241,13 @@
 
     switch (bank) {
       case 'bdo':
-        qrCodeImage.src = '{{ asset("images/qr-codes/qrcode-placeholder.webp") }}';
+        qrCodeImage.src = '{{ asset("images/payment-options/bdo-qr.png") }}';
         break;
       case 'landbank':
-        qrCodeImage.src = '{{ asset("images/qr-codes/qrcode-placeholder.webp") }}';
+        qrCodeImage.src = '{{ asset("images/payment-options/landbank-qr.png") }}';
         break;
       default:
-        qrCodeImage.src = '{{ asset("images/qr-codes/qrcode-placeholder.webp") }}';
+        qrCodeImage.src = '{{ asset("images/payment-options/landbank-qr.png") }}';
     }
 
     qrCodeContainer.style.display = 'block';
