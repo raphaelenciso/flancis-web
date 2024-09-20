@@ -1,3 +1,10 @@
+@php
+if (!Auth::check() || Auth::user()->role !== 'admin') {
+header("Location: /signin");
+exit();
+}
+@endphp
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -146,7 +153,7 @@
           </li>
 
           <!-- Nav Item - Notifications -->
-       
+
           <li class="nav-item dropdown no-arrow mx-1">
             <a
               class="nav-link dropdown-toggle"
@@ -166,28 +173,28 @@
               aria-labelledby="notificationsDropdown">
               <h6 class="dropdown-header">Notifications Center</h6>
               @forelse(Auth::user()->unreadNotifications as $notification)
-                <a class="dropdown-item d-flex align-items-center" href="#" onclick="event.preventDefault(); document.getElementById('mark-as-read-{{ $notification->notification_id }}').submit();">
-                  <div class="mr-3">
-                    <div class="icon-circle bg-primary">
-                      <i class="fas fa-file-alt text-white"></i>
-                    </div>
+              <a class="dropdown-item d-flex align-items-center" href="#" onclick="event.preventDefault(); document.getElementById('mark-as-read-{{ $notification->notification_id }}').submit();">
+                <div class="mr-3">
+                  <div class="icon-circle bg-primary">
+                    <i class="fas fa-file-alt text-white"></i>
                   </div>
-                  <div>
-                    <div class="small text-gray-500">{{ $notification->created_at->format('F d, Y') }}</div>
-                    <div class="{{ !$notification->is_read ? 'font-weight-bold' : '' }}">{{ $notification->message }}</div>
-                  </div>
-                </a>
-                <form id="mark-as-read-{{ $notification->notification_id }}" action="/admin/notifications/mark-as-read" method="POST" style="display: none;">
-                  @csrf
-                  <input type="hidden" name="notification_id" value="{{ $notification->notification_id }}">
-                </form>
+                </div>
+                <div>
+                  <div class="small text-gray-500">{{ $notification->created_at->format('F d, Y') }}</div>
+                  <div class="{{ !$notification->is_read ? 'font-weight-bold' : '' }}">{{ $notification->message }}</div>
+                </div>
+              </a>
+              <form id="mark-as-read-{{ $notification->notification_id }}" action="/admin/notifications/mark-as-read" method="POST" style="display: none;">
+                @csrf
+                <input type="hidden" name="notification_id" value="{{ $notification->notification_id }}">
+              </form>
               @empty
-                <a class="dropdown-item text-center small text-gray-500" href="#">No new notifications</a>
+              <a class="dropdown-item text-center small text-gray-500" href="#">No new notifications</a>
               @endforelse
 
             </div>
           </li>
-      
+
 
 
           <div class="topbar-divider d-none d-sm-block"></div>
