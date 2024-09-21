@@ -11,7 +11,7 @@ return new class extends Migration {
    */
   public function up(): void {
     Schema::create('resources_tbl', function (Blueprint $table) {
-      $table->string('resource_id', 36)->primary();
+      $table->string('resource_id', 16)->primary();
       $table->string('resource_name', 100);
       $table->integer('quantity');
       $table->enum('status', ['available', 'unavailable'])->default('available');

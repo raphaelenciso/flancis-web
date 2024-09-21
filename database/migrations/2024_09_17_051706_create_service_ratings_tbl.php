@@ -11,10 +11,10 @@ return new class extends Migration {
    */
   public function up(): void {
     Schema::create('service_ratings_tbl', function (Blueprint $table) {
-      $table->string('rating_id', 36)->primary();
+      $table->string('rating_id', 16)->primary();
       $table->string('appointment_id', 36);
-      $table->string('user_id', 36);
-      $table->string('service_id', 36);
+      $table->string('user_id', 16);
+      $table->string('service_id', 16);
       $table->integer('rating')->check('rating >= 1 AND rating <= 5');
       $table->text('description')->nullable();
       $table->timestamps();

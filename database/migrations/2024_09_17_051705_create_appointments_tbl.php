@@ -11,11 +11,11 @@ return new class extends Migration {
    */
   public function up(): void {
     Schema::create('appointments_tbl', function (Blueprint $table) {
-      $table->string('appointment_id', 36)->primary();
-      $table->string('user_id', 36);
+      $table->string('appointment_id', 16)->primary();
+      $table->string('user_id', 16);
       $table->date('appointment_date');
       $table->time('appointment_time');
-      $table->string('service_id', 36);
+      $table->string('service_id', 16);
       $table->string('payment_type', 36);
       $table->text('remarks')->nullable();
       $table->string('status', 20)->default('pending');
@@ -23,7 +23,7 @@ return new class extends Migration {
       $table->boolean('is_rated')->default(false);
       $table->string('proof', 100);
       $table->decimal('price', 10, 2);
-      $table->string('promo_id', 36)->nullable();
+      $table->string('promo_id', 16)->nullable();
       $table->timestamps();
 
       $table->foreign('user_id')->references('user_id')->on('users_tbl')->onDelete('cascade');

@@ -11,7 +11,7 @@ return new class extends Migration {
    */
   public function up(): void {
     Schema::create('employees_tbl', function (Blueprint $table) {
-      $table->string('employee_id', 36)->primary();
+      $table->string('employee_id', 16)->primary();
       $table->string('employee_first_name', 100);
       $table->string('employee_last_name', 100);
       $table->string('employee_middle_name', 100)->nullable();

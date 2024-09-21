@@ -9,8 +9,8 @@ return new class extends Migration {
   public function up() {
     Schema::create('promo_service_tbl', function (Blueprint $table) {
 
-      $table->string('service_id', 36);
-      $table->string('promo_id', 36);
+      $table->string('service_id', 16);
+      $table->string('promo_id', 16);
 
       $table->foreign('promo_id')->references('promo_id')->on('promos_tbl')->onDelete('cascade');
       $table->foreign('service_id')->references('service_id')->on('services_tbl')->onDelete('cascade');

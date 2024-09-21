@@ -11,8 +11,8 @@ return new class extends Migration {
    */
   public function up(): void {
     Schema::create('notifications_tbl', function (Blueprint $table) {
-      $table->string('notification_id', 36)->primary();
-      $table->string('user_id', 36);
+      $table->string('notification_id', 16)->primary();
+      $table->string('user_id', 16);
       $table->string('title', 100);
       $table->text('message');
       $table->boolean('is_read')->default(false);

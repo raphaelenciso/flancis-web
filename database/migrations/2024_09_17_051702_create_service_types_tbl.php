@@ -11,7 +11,7 @@ return new class extends Migration {
    */
   public function up(): void {
     Schema::create('service_types_tbl', function (Blueprint $table) {
-      $table->string('service_type_id', 36)->primary();
+      $table->string('service_type_id', 16)->primary();
       $table->string('service_type', 36);
       $table->string('service_image', 255);
       $table->enum('status', ['active', 'inactive'])->default('active');

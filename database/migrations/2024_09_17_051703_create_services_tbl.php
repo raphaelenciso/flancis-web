@@ -11,11 +11,11 @@ return new class extends Migration {
    */
   public function up(): void {
     Schema::create('services_tbl', function (Blueprint $table) {
-      $table->string('service_id', 36)->primary();
+      $table->string('service_id', 16)->primary();
       $table->string('service_name', 100);
-      $table->string('service_type_id', 36);
+      $table->string('service_type_id', 16);
       $table->decimal('price', 10, 2);
-      $table->decimal('rating', 10, 2)->nullable();
+      // $table->decimal('rating', 10, 2)->nullable();
       $table->text('description')->nullable();
       $table->enum('status', ['active', 'inactive'])->default('active');
       $table->timestamps();
