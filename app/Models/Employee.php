@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Employee extends Model {
   use HasFactory;
@@ -29,4 +30,12 @@ class Employee extends Model {
   protected $casts = [
     'birthday' => 'date',
   ];
+
+  protected static function boot() {
+    parent::boot();
+
+    static::creating(function ($model) {
+      $model->employee_id = Str::random(16);
+    });
+  }
 }

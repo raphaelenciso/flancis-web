@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Appointment extends Model {
   use HasFactory;
@@ -49,5 +50,13 @@ class Appointment extends Model {
 
   public function promo() {
     return $this->belongsTo(Promo::class, 'promo_id', 'promo_id');
+  }
+
+  protected static function boot() {
+    parent::boot();
+
+    static::creating(function ($model) {
+      $model->appointment_id = Str::random(16);
+    });
   }
 }

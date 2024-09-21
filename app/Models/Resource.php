@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Resource extends Model {
   use HasFactory;
@@ -23,4 +24,12 @@ class Resource extends Model {
     'quantity' => 'integer',
     'status' => 'string',
   ];
+
+  protected static function boot() {
+    parent::boot();
+
+    static::creating(function ($model) {
+      $model->resource_id = Str::random(16);
+    });
+  }
 }

@@ -32,8 +32,10 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: #f8f9fa;
+    background-color: #fff;
     text-align: center;
+    border-radius: 0.35rem;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
 }
 
 .no-promos-slide h5,
@@ -203,4 +205,8 @@
         font-size: 0.9rem;
         padding: 0.3rem 1rem;
     }
+}
+
+#serviceTypeCarousel .no-services-slide {
+    height: 200px;
 }

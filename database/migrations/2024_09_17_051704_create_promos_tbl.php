@@ -19,8 +19,6 @@ return new class extends Migration {
       $table->date('end_date');
       $table->timestamps();
     });
-
-    DB::statement('ALTER TABLE promos_tbl MODIFY promo_id CHAR(16) NOT NULL DEFAULT (SUBSTRING(MD5(RAND()) FROM 1 FOR 16))');
   }
 
   /**

@@ -28,9 +28,6 @@ return new class extends Migration {
 
       $table->timestamps();
     });
-
-    // Generate hex string for user_id
-    DB::statement('ALTER TABLE users_tbl MODIFY user_id CHAR(16) NOT NULL DEFAULT (SUBSTRING(MD5(RAND()) FROM 1 FOR 16))');
   }
 
   /**

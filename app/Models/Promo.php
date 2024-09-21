@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Promo extends Model {
   use HasFactory;
@@ -30,5 +31,13 @@ class Promo extends Model {
 
   public function services() {
     return $this->belongsToMany(Service::class, 'promo_service_tbl', 'promo_id', 'service_id');
+  }
+
+  protected static function boot() {
+    parent::boot();
+
+    static::creating(function ($model) {
+      $model->promo_id = Str::random(16);
+    });
   }
 }

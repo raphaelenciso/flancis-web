@@ -22,8 +22,6 @@ return new class extends Migration {
 
       $table->foreign('service_type_id')->references('service_type_id')->on('service_types_tbl')->onDelete('cascade');
     });
-
-    DB::statement('ALTER TABLE services_tbl MODIFY service_id CHAR(16) NOT NULL DEFAULT (SUBSTRING(MD5(RAND()) FROM 1 FOR 16))');
   }
 
   /**

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Service extends Model {
   use HasFactory;
@@ -42,5 +43,13 @@ class Service extends Model {
   // Add this new relationship
   public function promos() {
     return $this->belongsToMany(Promo::class, 'promo_service_tbl', 'service_id', 'promo_id');
+  }
+
+  protected static function boot() {
+    parent::boot();
+
+    static::creating(function ($model) {
+      $model->service_id = Str::random(16);
+    });
   }
 }

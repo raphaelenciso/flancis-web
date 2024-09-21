@@ -23,8 +23,6 @@ return new class extends Migration {
       $table->foreign('user_id')->references('user_id')->on('users_tbl')->onDelete('cascade');
       $table->foreign('service_id')->references('service_id')->on('services_tbl')->onDelete('cascade');
     });
-
-    DB::statement('ALTER TABLE service_ratings_tbl MODIFY rating_id CHAR(16) NOT NULL DEFAULT (SUBSTRING(MD5(RAND()) FROM 1 FOR 16))');
   }
 
   /**

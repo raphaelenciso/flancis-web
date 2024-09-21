@@ -17,8 +17,6 @@ return new class extends Migration {
       $table->enum('status', ['active', 'inactive'])->default('active');
       $table->timestamps();
     });
-
-    DB::statement('ALTER TABLE service_types_tbl MODIFY service_type_id CHAR(16) NOT NULL DEFAULT (SUBSTRING(MD5(RAND()) FROM 1 FOR 16))');
   }
 
   /**

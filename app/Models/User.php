@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable {
   use HasApiTokens, HasFactory, Notifiable;
@@ -84,5 +85,13 @@ class User extends Authenticatable {
 
   public function unreadNotifications() {
     return $this->notifications()->where('is_read', false);
+  }
+
+  protected static function boot() {
+    parent::boot();
+
+    static::creating(function ($model) {
+      $model->user_id = Str::random(16);
+    });
   }
 }

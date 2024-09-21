@@ -24,8 +24,6 @@ return new class extends Migration {
       $table->string('employee_image', 100)->nullable();
       $table->timestamps();
     });
-
-    DB::statement('ALTER TABLE employees_tbl MODIFY employee_id CHAR(16) NOT NULL DEFAULT (SUBSTRING(MD5(RAND()) FROM 1 FOR 16))');
   }
 
   /**

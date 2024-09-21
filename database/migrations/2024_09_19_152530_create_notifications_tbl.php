@@ -21,8 +21,6 @@ return new class extends Migration {
 
       $table->foreign('user_id')->references('user_id')->on('users_tbl')->onDelete('cascade');
     });
-
-    DB::statement('ALTER TABLE notifications_tbl MODIFY notification_id CHAR(16) NOT NULL DEFAULT (SUBSTRING(MD5(RAND()) FROM 1 FOR 16))');
   }
 
   /**
