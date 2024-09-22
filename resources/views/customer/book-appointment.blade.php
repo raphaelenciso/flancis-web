@@ -136,6 +136,10 @@
 @section('scripts')
 <script>
   document.addEventListener('DOMContentLoaded', function() {
+    // Disable previous dates
+    var today = new Date().toISOString().split('T')[0];
+    document.getElementById('appointment_date').setAttribute('min', today);
+
     var paymentTypeSelect = document.getElementById('payment_type');
     var bankOptions = document.getElementById('bank_options');
     var qrCodeContainer = document.getElementById('qr_code_container');
