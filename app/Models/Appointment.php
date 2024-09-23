@@ -27,6 +27,8 @@ class Appointment extends Model {
     'proof',
     'price',
     'promo_id',
+    'notified1h',
+    'notified1d',
   ];
 
   protected $casts = [
@@ -34,6 +36,8 @@ class Appointment extends Model {
     'appointment_time' => 'datetime',
     'is_rated' => 'boolean',
     'price' => 'decimal:2',
+    'notified1h' => 'boolean',
+    'notified1d' => 'boolean',
   ];
 
   public function user() {

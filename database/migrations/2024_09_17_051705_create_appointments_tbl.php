@@ -24,6 +24,8 @@ return new class extends Migration {
       $table->string('proof', 100);
       $table->decimal('price', 10, 2);
       $table->string('promo_id', 16)->nullable();
+      $table->boolean('notified1h')->default(false);
+      $table->boolean('notified1d')->default(false);
       $table->timestamps();
 
       $table->foreign('user_id')->references('user_id')->on('users_tbl')->onDelete('cascade');

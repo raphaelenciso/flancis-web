@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\ResourceController;
 use App\Http\Controllers\Admin\PromoController;
 use App\Http\Controllers\Admin\CalendarController;
 use App\Http\Controllers\Admin\NotificationController;
+use App\Http\Controllers\ScheduleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,6 +51,7 @@ Route::get('/profile', [UserController::class, 'index']);
 // Route::get('/users/{id}', [UserController::class, 'view']);
 Route::put('/profile', [UserController::class, 'update']);
 
+Route::get('/schedule/appointments', [ScheduleController::class, 'index']);
 
 Route::prefix('/customer')->group(function () {
   Route::get('/home', [CustomerHomeController::class, 'index']);
