@@ -113,6 +113,14 @@ exit();
         </a>
       </li>
 
+      <!-- Add this new item in the sidebar -->
+      <li class="nav-item {{ Request::is('admin/reports*') ? 'active' : '' }}">
+        <a class="nav-link" href="/admin/reports">
+          <i class="fas fa-fw fa-chart-bar"></i>
+          <span>Reports</span>
+        </a>
+      </li>
+
       <!-- Divider -->
       <hr class="sidebar-divider d-none d-md-block" />
 

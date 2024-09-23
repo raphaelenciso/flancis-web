@@ -20,6 +20,7 @@ use App\Http\Controllers\Admin\PromoController;
 use App\Http\Controllers\Admin\CalendarController;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\ScheduleController;
+use App\Http\Controllers\Admin\ReportsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -111,5 +112,9 @@ Route::prefix('/admin')->group(function () {
   Route::get('/appointments/date/{date}', [CalendarController::class, 'getAppointmentsByDate']);
 
   Route::post('/notifications/mark-as-read', [NotificationController::class, 'markAsRead']);
+
+  Route::get('/reports', [ReportsController::class, 'index'])->name('admin.reports.index');
+  Route::get('/reports/export', [ReportsController::class, 'export'])->name('admin.reports.export');
+  Route::get('/reports/fetch', [ReportsController::class, 'fetchReportData'])->name('admin.reports.fetch');
 });
 Route::redirect('/admin', '/admin/dashboard');
