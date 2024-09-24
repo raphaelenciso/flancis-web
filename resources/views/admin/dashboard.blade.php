@@ -187,7 +187,7 @@ return 'secondary';
             <div class="chart-pie pt-4 pb-2">
               <canvas id="myPieChart"></canvas>
             </div>
-  
+
           </div>
         </div>
       </div>
@@ -203,34 +203,34 @@ return 'secondary';
       <div class="card-body">
         <div class="appointment-list" style="max-height: none; overflow-y: auto;">
           @forelse($todayAppointments as $appointment)
-            <div class="card mb-3">
-              <div class="card-body py-2">
-                <div class="row no-gutters align-items-center">
-                  <div class="col-auto mr-2">
-                    <img src="{{ $appointment->user->picture ?  asset("images/customer-pictures/" . $appointment->user->picture) : asset('images/user-placeholder.png') }}" 
-                      class="rounded-circle" width="40" height="40" 
-                      alt="{{ $appointment->user->first_name }} {{ $appointment->user->last_name }}">
-                  </div>
-                  <div class="col">
-                    <h6 class="mb-0">
-                      {{ $appointment->user->first_name }} 
-                      {{ $appointment->user->middle_name ? $appointment->user->middle_name . ' ' : '' }}
-                      {{ $appointment->user->last_name }}
-                    </h6>
-                    <small class="text-muted">
-                      {{ $appointment->service->service_name }} at {{ $appointment->appointment_time->format('g:i A') }}
-                    </small>
-                  </div>
-                  <div class="col-auto">
-                    <span class="badge badge-{{ getStatusClass($appointment->status) }}">
-                      {{ ucfirst($appointment->status) }}
-                    </span>
-                  </div>
+          <div class="card mb-3">
+            <div class="card-body py-2">
+              <div class="row no-gutters align-items-center">
+                <div class="col-auto mr-2">
+                  <img src="{{ $appointment->user->picture ?  asset("images/customer-pictures/" . $appointment->user->picture) : asset('images/user-placeholder.png') }}"
+                    class="rounded-circle" width="40" height="40"
+                    alt="{{ $appointment->user->first_name }} {{ $appointment->user->last_name }}">
+                </div>
+                <div class="col">
+                  <h6 class="mb-0">
+                    {{ $appointment->user->first_name }}
+                    {{ $appointment->user->middle_name ? $appointment->user->middle_name . ' ' : '' }}
+                    {{ $appointment->user->last_name }}
+                  </h6>
+                  <small class="text-muted">
+                    {{ $appointment->service->service_name }} at {{ $appointment->appointment_time->format('g:i A') }}
+                  </small>
+                </div>
+                <div class="col-auto">
+                  <span class="badge badge-{{ getStatusClass($appointment->status) }}">
+                    {{ ucfirst($appointment->status) }}
+                  </span>
                 </div>
               </div>
             </div>
+          </div>
           @empty
-            <p class="text-center">No appointments for today.</p>
+          <p class="text-center">No appointments for today.</p>
           @endforelse
         </div>
       </div>
@@ -250,36 +250,36 @@ return 'secondary';
 <script src="{{ asset('js/demo/chart-pie-demo.js') }}"></script>
 
 
-<script>  $(document).ready(function() {
-  var ctx = $("#myAreaChart");
-  var monthlyData = @json(array_values($monthlyData));
-  var myLineChart = createAreaChart(ctx, monthlyData);
+<script>
+  $(document).ready(function() {
+    var ctx = $("#myAreaChart");
+    var monthlyData = @json(array_values($monthlyData));
+    var myLineChart = createAreaChart(ctx, monthlyData);
 
-  var serviceTypeData = @json($serviceTypeRevenue);
-  var labels = serviceTypeData.map(item => item.service_type);
-  var data = serviceTypeData.map(item => item.appointment_count);
+    console.log(monthlyData);
 
-  // Generate colors based on the number of service types
-  var colors = generateColors(serviceTypeData.length);
+    var serviceTypeData = @json($serviceTypeRevenue);
+    var labels = serviceTypeData.map(item => item.service_type);
+    var data = serviceTypeData.map(item => item.appointment_count);
 
-  var pieData = {
-    labels: labels,
-    datasets: [{
-      data: data,
-      backgroundColor: colors,
-      hoverBackgroundColor: colors.map(color => LightenDarkenColor(color, -20)),
-      hoverBorderColor: "rgba(234, 236, 244, 1)",
-    }],
-  };
+    // Generate colors based on the number of service types
+    var colors = generateColors(serviceTypeData.length);
 
-
-  var ctx2 = $("#myPieChart");
-  var myPieChart = createPieChart(ctx2, pieData);
+    var pieData = {
+      labels: labels,
+      datasets: [{
+        data: data,
+        backgroundColor: colors,
+        hoverBackgroundColor: colors.map(color => LightenDarkenColor(color, -20)),
+        hoverBorderColor: "rgba(234, 236, 244, 1)",
+      }],
+    };
 
 
-});
+    var ctx2 = $("#myPieChart");
+    var myPieChart = createPieChart(ctx2, pieData);
 
-  
+
+  });
 </script>
 @endsection
-

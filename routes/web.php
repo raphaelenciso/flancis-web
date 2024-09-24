@@ -116,5 +116,6 @@ Route::prefix('/admin')->group(function () {
   Route::get('/reports', [ReportsController::class, 'index'])->name('admin.reports.index');
   Route::get('/reports/export', [ReportsController::class, 'export'])->name('admin.reports.export');
   Route::get('/reports/fetch', [ReportsController::class, 'fetchReportData'])->name('admin.reports.fetch');
+  Route::get('/reports/data/{period?}', [ReportsController::class, 'fetchReportData'])->name('admin.reports.data');
 });
 Route::redirect('/admin', '/admin/dashboard');
