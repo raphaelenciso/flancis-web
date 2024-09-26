@@ -96,13 +96,23 @@
       <div class="col-md-6">
         <div class="form-group">
           <label for="password">Password</label>
-          <input type="password" class="form-control" id="password" name="password" required>
+          <div class="password-input-wrapper">
+            <input type="password" class="form-control" id="password" name="password" required>
+            <span class="password-toggle" onclick="togglePassword('password')">
+              <i class="fas fa-eye"></i>
+            </span>
+          </div>
         </div>
       </div>
       <div class="col-md-6">
         <div class="form-group">
           <label for="password_confirmation">Confirm Password</label>
-          <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" required>
+          <div class="password-input-wrapper">
+            <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" required>
+            <span class="password-toggle" onclick="togglePassword('password_confirmation')">
+              <i class="fas fa-eye"></i>
+            </span>
+          </div>
         </div>
       </div>
     </div>
@@ -123,4 +133,23 @@
 
 
 
+@endsection
+
+@section('scripts')
+<script>
+  function togglePassword(inputId) {
+    const passwordInput = document.getElementById(inputId);
+    const icon = passwordInput.nextElementSibling.querySelector('i');
+
+    if (passwordInput.type === 'password') {
+      passwordInput.type = 'text';
+      icon.classList.remove('fa-eye');
+      icon.classList.add('fa-eye-slash');
+    } else {
+      passwordInput.type = 'password';
+      icon.classList.remove('fa-eye-slash');
+      icon.classList.add('fa-eye');
+    }
+  }
+</script>
 @endsection

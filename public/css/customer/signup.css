@@ -1,110 +1,128 @@
 body {
-  background: linear-gradient(
-    135deg,
-    var(--accent-dark) 0%,
-    var(--tertiary-bg) 100%
-  );
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-dark);
+    background: linear-gradient(
+        135deg,
+        var(--accent-dark) 0%,
+        var(--tertiary-bg) 100%
+    );
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-dark);
 }
 
 .container {
-  background-color: rgba(255, 255, 255, 0.95);
-  border-radius: 10px;
-  box-shadow: 0 0 20px var(--shadow);
-  padding: 30px;
-  max-width: 800px;
-  width: 100%;
-  margin-top: 20px;
+    background-color: rgba(255, 255, 255, 0.95);
+    border-radius: 10px;
+    box-shadow: 0 0 20px var(--shadow);
+    padding: 30px;
+    max-width: 800px;
+    width: 100%;
+    margin-top: 20px;
 }
 
 h2 {
-  color: var(--primary-bg);
-  margin-bottom: 30px;
-  text-align: center;
+    color: var(--primary-bg);
+    margin-bottom: 30px;
+    text-align: center;
 }
 
 .form-group label {
-  color: var(--accent-dark);
-  font-weight: bold;
+    color: var(--accent-dark);
+    font-weight: bold;
 }
 
 .form-control {
-  border-color: var(--accent-light);
-  color: var(--text-dark);
-  background-color: rgba(255, 255, 255, 0.8);
-  transition: all 0.3s ease;
+    border-color: var(--accent-light);
+    color: var(--text-dark);
+    background-color: rgba(255, 255, 255, 0.8);
+    transition: all 0.3s ease;
 }
 
 .form-control:focus {
-  border-color: var(--accent-medium);
-  box-shadow: 0 0 0 0.2rem rgba(173, 124, 82, 0.25);
-  background-color: rgba(255, 255, 255, 1);
+    border-color: var(--accent-medium);
+    box-shadow: 0 0 0 0.2rem rgba(173, 124, 82, 0.25);
+    background-color: rgba(255, 255, 255, 1);
 }
 
-.btn[name='signup'] {
-  background-color: var(--primary-bg);
-  border-color: var(--primary-bg);
-  color: var(--text-light);
-  padding: 10px 20px;
-  font-size: 18px;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  margin-top: 20px;
+.btn[name="signup"] {
+    background-color: var(--primary-bg);
+    border-color: var(--primary-bg);
+    color: var(--text-light);
+    padding: 10px 20px;
+    font-size: 18px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    margin-top: 20px;
 }
 
-.btn[name='signup']:hover,
-.btn[name='signup']:focus {
-  background-color: var(--accent-dark);
-  border-color: var(--accent-dark);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+.btn[name="signup"]:hover,
+.btn[name="signup"]:focus {
+    background-color: var(--accent-dark);
+    border-color: var(--accent-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
 }
 
 .alert-success {
-  background-color: var(--accent-light);
-  border-color: var(--accent-medium);
-  color: var(--text-dark);
+    background-color: var(--accent-light);
+    border-color: var(--accent-medium);
+    color: var(--text-dark);
 }
 
 .alert-danger {
-  background-color: #f8d7da;
-  border-color: #f5c6cb;
-  color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
 }
 
 a {
-  color: var(--primary-bg);
-  transition: color 0.3s ease;
+    color: var(--primary-bg);
+    transition: color 0.3s ease;
 }
 
 a:hover {
-  color: var(--accent-dark);
-  text-decoration: none;
+    color: var(--accent-dark);
+    text-decoration: none;
 }
 
 /* Custom styles for form elements */
 select.form-control {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23ad7c52' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 0.75rem center;
-  background-size: 12px 12px;
-  padding-right: 2rem;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23ad7c52' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 12px 12px;
+    padding-right: 2rem;
 }
 
-input[type='date']::-webkit-calendar-picker-indicator {
-  filter: invert(48%) sepia(13%) saturate(3207%) hue-rotate(330deg)
-    brightness(95%) contrast(80%);
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(48%) sepia(13%) saturate(3207%) hue-rotate(330deg)
+        brightness(95%) contrast(80%);
 }
 
 p {
-  text-align: center;
-  margin-top: 20px;
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Add these styles to your signup.css file */
+.password-input-wrapper {
+    position: relative;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #888;
+}
+
+.form-group .password-input-wrapper input {
+    padding-right: 35px;
 }

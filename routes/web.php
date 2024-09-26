@@ -21,6 +21,7 @@ use App\Http\Controllers\Admin\CalendarController;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\Admin\ReportsController;
+use App\Http\Controllers\ForgotPasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,6 +54,11 @@ Route::get('/profile', [UserController::class, 'index']);
 Route::put('/profile', [UserController::class, 'update']);
 
 Route::get('/schedule/appointments', [ScheduleController::class, 'index']);
+
+Route::get('/forgot-password', [ForgotPasswordController::class, 'showForgotPasswordForm']);
+Route::post('/forgot-password', [ForgotPasswordController::class, 'submitForgotPasswordForm']);
+Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'showResetPasswordForm']);
+Route::post('/reset-password', [ForgotPasswordController::class, 'submitResetPasswordForm']);
 
 Route::prefix('/customer')->group(function () {
   Route::get('/home', [CustomerHomeController::class, 'index']);
