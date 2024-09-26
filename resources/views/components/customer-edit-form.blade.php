@@ -1,9 +1,23 @@
-@if (session('success'))
-<div class="alert alert-success">{{ session('success') }}</div>
+@if ($errors->any())
+<div class="alert alert-danger">
+  <ul>
+    @foreach ($errors->all() as $error)
+    <li>{{ $error }}</li>
+    @endforeach
+  </ul>
+</div>
 @endif
 
 @if (session('error'))
-<div class="alert alert-danger">{{ session('error') }}</div>
+<div class="alert alert-danger">
+  {{ session('error') }}
+</div>
+@endif
+
+@if (session('success'))
+<div class="alert alert-success">
+  {{ session('success') }}
+</div>
 @endif
 
 <!-- Profile Form -->
@@ -15,19 +29,19 @@
     <form method="POST" action="/profile" enctype="multipart/form-data">
       @csrf
       @method('PUT')
-      
+
       <!-- Profile Picture Section -->
       <div class="form-group text-center mb-4">
         <label for="picture">Profile Picture</label>
         <div class="mb-2">
-        
-            <img src="{{ $user->picture ? asset('images/customer-pictures/' . $user->picture) : asset('images/user-placeholder.png') }} " alt="Current Profile Picture" class="rounded-circle" style="width: 200px; height: 200px; object-fit: cover; cursor: pointer;" id="profile-image">
-      
+
+          <img src="{{ $user->picture ? asset('images/customer-pictures/' . $user->picture) : asset('images/user-placeholder.png') }} " alt="Current Profile Picture" class="rounded-circle" style="width: 200px; height: 200px; object-fit: cover; cursor: pointer;" id="profile-image">
+
         </div>
         <input type="file" class="form-control-file d-none" id="picture" name="picture" accept="image/*">
 
-            <button type="button" class="btn btn-primary btn-sm mt-2" id="change-picture-btn">{{ $user->picture ? "Change Picture" : "Add Picture"}}</button>
-    
+        <button type="button" class="btn btn-primary btn-sm mt-2" id="change-picture-btn">{{ $user->picture ? "Change Picture" : "Add Picture"}}</button>
+
       </div>
 
       <!-- Rest of the form fields -->
@@ -87,7 +101,23 @@
         <label for="address">Address</label>
         <textarea class="form-control" id="address" name="address" rows="3" required>{{ $user->address }}</textarea>
       </div>
-      
+
+      <!-- New password fields -->
+      <div class="form-group row">
+        <div class="col-sm-4 mb-3 mb-sm-0">
+          <label for="current_password">Current Password</label>
+          <input type="password" class="form-control" id="current_password" name="current_password">
+        </div>
+        <div class="col-sm-4">
+          <label for="new_password">New Password</label>
+          <input type="password" class="form-control" id="new_password" name="new_password">
+        </div>
+        <div class="col-sm-4">
+          <label for="new_password_confirmation">Confirm New Password</label>
+          <input type="password" class="form-control" id="new_password_confirmation" name="new_password_confirmation">
+        </div>
+      </div>
+
       <div class="form-group">
         <button type="submit" name="update_profile" class="btn btn-primary">Update Profile</button>
         <a href="{{ url()->previous() }}" class="btn btn-secondary">Cancel</a>

@@ -55,6 +55,14 @@ exit();
         </a>
       </li>
 
+      <!-- Nav Item - Services -->
+      <li class="nav-item {{ Request::is('customer/services') ? 'active' : '' }}">
+        <a class="nav-link" href="/customer/services">
+          <i class="fas fa-fw fa-concierge-bell"></i>
+          <span>Services</span>
+        </a>
+      </li>
+
       <!-- Divider -->
       <hr class="sidebar-divider d-none d-md-block" />
 

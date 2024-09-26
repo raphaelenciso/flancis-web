@@ -43,7 +43,9 @@ return 'secondary';
       <div class="card-header py-3 d-flex justify-content-between align-items-center">
         <h6 class="m-0 font-weight-bold text-primary">Activities</h6>
         <div class="search-box">
-          <input type="text" id="searchInput" class="form-control" placeholder="Search activities...">
+          <form action="{{ url('/customer/activities') }}" method="GET">
+            <input type="text" id="searchInput" name="search" class="form-control" placeholder="Search services..." value="{{ $search ?? '' }}">
+          </form>
         </div>
       </div>
       <div class="card-body">
@@ -52,52 +54,61 @@ return 'secondary';
             <a class="nav-link active" id="upcoming-tab" data-toggle="tab" href="#upcoming" role="tab">Upcoming</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" id="past-tab" data-toggle="tab" href="#past" role="tab">Past</a>
+            <a class="nav-link" id="recent-tab" data-toggle="tab" href="#recent" role="tab">Recent</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="cancelled-tab" data-toggle="tab" href="#cancelled" role="tab">Cancelled</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" id="rejected-tab" data-toggle="tab" href="#rejected" role="tab">Rejected</a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" id="completed-tab" data-toggle="tab" href="#completed" role="tab">Completed</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="all-tab" data-toggle="tab" href="#all" role="tab">All</a>
+          </li>
         </ul>
         <div class="tab-content mt-3" id="appointmentTabContent">
-          @foreach(['upcoming', 'past', 'rejected'] as $tabName)
+          @foreach(['upcoming', 'recent', 'cancelled', 'rejected', 'completed', 'all'] as $tabName)
           <div class="tab-pane fade {{ $tabName === 'upcoming' ? 'show active' : '' }}" id="{{ $tabName }}" role="tabpanel">
             <div class="appointment-list">
-              @foreach($appointments as $appointment)
-              @if(($tabName === 'upcoming' && $appointment->appointment_date >= date('Y-m-d') && $appointment->status != 'rejected') ||
-              ($tabName === 'past' && $appointment->appointment_date < date('Y-m-d') && $appointment->status != 'rejected') ||
-                ($tabName === 'rejected' && $appointment->status == 'rejected'))
-                <div class="card mb-3 appointment-card">
-                  <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
-                    <div class="d-flex align-items-center">
-                      <img src="{{ $appointment->service->serviceType->service_image ? asset( $appointment->service->serviceType->service_image) : asset('img/default-service-type.jpg') }}" alt="{{ $appointment->service->serviceType->service_type }}" class="service-image">
-                      <h5 class="card-title mb-0 ml-3">{{ $appointment->service->serviceType->service_type }} - {{ $appointment->service->service_name }}</h5>
-                    </div>
-                    @if(in_array($appointment->status, ['rejected', 'cancelled']))
-                    <button class="btn btn-info btn-sm view-reason-btn"
-                      onclick="openReasonModal('{{ $appointment->appointment_id }}', '{{ $appointment->admin_note }}', '{{ $appointment->status == 'rejected' ? 'Rejection' : 'Cancellation' }}')">
-                      View Reason
+              @if($appointmentsByCategory[$tabName]->isEmpty())
+              <p>No appointments found.</p>
+              @else
+              @foreach($appointmentsByCategory[$tabName] as $appointment)
+              <div class="card mb-3 appointment-card">
+                <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
+                  <div class="d-flex align-items-center">
+                    <img src="{{ $appointment->service->serviceType->service_image ? asset( $appointment->service->serviceType->service_image) : asset('img/default-service-type.jpg') }}" alt="{{ $appointment->service->serviceType->service_type }}" class="service-image">
+                    <h5 class="card-title mb-0 ml-3">{{ $appointment->service->serviceType->service_type }} - {{ $appointment->service->service_name }}</h5>
+                  </div>
+                  @if(in_array($appointment->status, ['rejected', 'cancelled']))
+                  <button class="btn btn-info btn-sm view-reason-btn"
+                    onclick="openReasonModal('{{ $appointment->appointment_id }}', '{{ $appointment->admin_note }}', '{{ $appointment->status == 'rejected' ? 'Rejection' : 'Cancellation' }}')">
+                    View Reason
+                  </button>
+                  @endif
+                  @if($appointment->status == 'completed' && $appointment->appointment_date < date('Y-m-d'))
+                    @if($appointment->is_rated)
+                    <div class='rating-stars'>{{ $appointment->serviceRating->rating }} <i class="fas fa-star text-warning"></i></div>
+                    @else
+                    <button class="btn btn-primary btn-sm rate-service-btn" onclick="openRatingModal('{{ $appointment->appointment_id }}', '{{ $appointment->service->service_name }}')">
+                      Rate Service
                     </button>
                     @endif
-                    @if($appointment->status == 'completed' && $appointment->appointment_date < date('Y-m-d'))
-                      @if($appointment->is_rated)
-                      <div class='rating-stars'>{{ $appointment->serviceRating->rating }} <i class="fas fa-star text-warning"></i></div>
-                      @else
-                      <button class="btn btn-primary btn-sm rate-service-btn" onclick="openRatingModal('{{ $appointment->appointment_id }}', '{{ $appointment->service->service_name }}')">
-                        Rate Service
-                      </button>
-                      @endif
-                      @endif
-                  </div>
-                  <div class="card-body">
-                    <h6 class="card-subtitle mb-2 text-muted">
-                      <i class="fas fa-calendar-alt mr-2"></i>{{ $appointment->appointment_date->format('F j, Y') }} at {{ $appointment->appointment_time->format('g:i A') }}
-                    </h6>
-                    <p class="card-text">
-                      <span class="badge badge-{{ getStatusClass($appointment->status) }} mb-2">{{ $appointment->status }}</span><br>
-                      <strong>Payment:</strong> {{ $appointment->payment_type }}<br>
-                      <strong>Price:</strong>
-                      @if($appointment->promo)
-                      <span class="text-muted text-decoration-line-through"><s> ₱{{ number_format($appointment->service->price, 2) }}</s></span>
+                    @endif
+                </div>
+                <div class="card-body">
+                  <h6 class="card-subtitle mb-2 text-muted">
+                    <i class="fas fa-calendar-alt mr-2"></i>{{ $appointment->appointment_date->format('F j, Y') }} at {{ $appointment->appointment_time->format('g:i A') }}
+                  </h6>
+                  <p class="card-text">
+                    <span class="badge badge-{{ getStatusClass($appointment->status) }} mb-2">{{ $appointment->status }}</span><br>
+                    <strong>Payment:</strong> {{ $appointment->payment_type }}<br>
+                    <strong>Price:</strong>
+                    @if($appointment->promo)
+                    <span class="text-muted text-decoration-line-through"> ₱{{ number_format($appointment->service->price, 2) }}
                       <span class="text-success font-weight-bold">₱{{ number_format($appointment->price, 2) }}</span>
                       <span class="badge badge-success">{{ $appointment->promo->promo_name }}</span>
                       @else
@@ -105,11 +116,11 @@ return 'secondary';
                       @endif
                       <br>
                       <strong>Remarks:</strong> {{ $appointment->remarks }}
-                    </p>
-                  </div>
+                  </p>
                 </div>
-                @endif
-                @endforeach
+              </div>
+              @endforeach
+              @endif
             </div>
           </div>
           @endforeach
@@ -141,13 +152,25 @@ return 'secondary';
             <label for="rating">Rating:</label>
             <div class="star-rating">
               @for($i = 5; $i >= 1; $i--)
-              <input type="radio" id="star{{ $i }}" name="rating" value="{{ $i }}" /><label for="star{{ $i }}"></label>
+              <input type="radio" id="star{{ $i }}" name="rating" value="{{ $i }}" required /><label for="star{{ $i }}"></label>
               @endfor
             </div>
           </div>
           <div class="form-group">
             <label for="ratingDescription">Description:</label>
-            <textarea class="form-control" id="ratingDescription" name="ratingDescription" rows="3"></textarea>
+            <select class="form-control" id="ratingDescription" name="ratingDescription" required>
+              <option value="">Select a description</option>
+              <option value="The service exceeded my expectations.">The service exceeded my expectations.</option>
+              <option value="I am satisfied with the overall quality of the service.">I am satisfied with the overall quality of the service.</option>
+              <option value="The service met my needs but could be improved.">The service met my needs but could be improved.</option>
+              <option value="There were some issues with the service that need attention.">There were some issues with the service that need attention.</option>
+              <option value="I am not satisfied with the service.">I am not satisfied with the service.</option>
+              <option value="The service was delivered on time and as expected.">The service was delivered on time and as expected.</option>
+              <option value="Communication was excellent throughout the process.">Communication was excellent throughout the process.</option>
+              <option value="The service did not meet the promised standards.">The service did not meet the promised standards.</option>
+              <option value="I would highly recommend this service to others.">I would highly recommend this service to others.</option>
+              <option value="I encountered delays and poor communication during the service.">I encountered delays and poor communication during the service.</option>
+            </select>
           </div>
         </form>
       </div>
@@ -193,6 +216,11 @@ return 'secondary';
     const rating = $('input[name="rating"]:checked').val();
     const description = $('#ratingDescription').val();
 
+    if (!rating || !description) {
+      alert('Please provide both a rating and a description.');
+      return;
+    }
+
     $.ajax({
       url: '/customer/submit-rating',
       method: 'POST',
@@ -208,7 +236,7 @@ return 'secondary';
         location.reload();
       },
       error: function(error) {
-        console.log(error)
+        console.log(error);
         alert('Error submitting rating. Please try again.');
       }
     });
@@ -225,6 +253,12 @@ return 'secondary';
       e.preventDefault()
       $(this).tab('show')
     })
+
+    $('#searchInput').on('keyup', function(e) {
+      if (e.key === 'Enter') {
+        $(this).closest('form').submit();
+      }
+    });
   });
 </script>
 @endsection

@@ -21,16 +21,18 @@ return new class extends Migration {
       $table->string('status', 20)->default('pending');
       $table->text('admin_note')->nullable();
       $table->boolean('is_rated')->default(false);
-      $table->string('proof', 100);
+      $table->string('proof', 100)->nullable();
       $table->decimal('price', 10, 2);
       $table->string('promo_id', 16)->nullable();
       $table->boolean('notified1h')->default(false);
       $table->boolean('notified1d')->default(false);
+      $table->string('employee_id', 16)->nullable();
       $table->timestamps();
 
       $table->foreign('user_id')->references('user_id')->on('users_tbl')->onDelete('cascade');
       $table->foreign('service_id')->references('service_id')->on('services_tbl')->onDelete('cascade');
       $table->foreign('promo_id')->references('promo_id')->on('promos_tbl')->onDelete('set null');
+      $table->foreign('employee_id')->references('employee_id')->on('employees_tbl')->onDelete('set null');
     });
   }
 

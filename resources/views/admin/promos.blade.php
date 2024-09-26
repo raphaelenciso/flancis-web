@@ -1,6 +1,3 @@
-
-
-
 @extends('layouts.admin')
 
 @section('content')
@@ -47,7 +44,9 @@
             <td>{{ $promo->end_date->format('Y-m-d') }}</td>
             <td>
               <button class="btn btn-sm btn-primary edit-promo-btn" data-id="{{ $promo->promo_id }}">Edit</button>
+              @if(env('SUPER_ADMIN_ENABLED', false))
               <button class="btn btn-sm btn-danger delete-promo-btn" data-id="{{ $promo->promo_id }}">Delete</button>
+              @endif
             </td>
           </tr>
           @endforeach
@@ -86,7 +85,7 @@
             <label for="service_id">Services</label>
             <select class="form-control" id="service_id" name="service_id[]" multiple required>
               @foreach ($services as $service)
-                <option value="{{ $service->service_id }}">{{ $service->service_name }}</option>
+              <option value="{{ $service->service_id }}">{{ $service->service_name }}</option>
               @endforeach
             </select>
           </div>
@@ -140,7 +139,7 @@
             <label for="edit_service_id">Services</label>
             <select class="form-control" id="edit_service_id" name="service_id[]" multiple required>
               @foreach ($services as $service)
-                <option value="{{ $service->service_id }}">{{ $service->service_name }}</option>
+              <option value="{{ $service->service_id }}">{{ $service->service_name }}</option>
               @endforeach
             </select>
           </div>

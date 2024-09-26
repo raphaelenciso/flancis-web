@@ -112,6 +112,17 @@
               <option value="completed">Completed</option>
             </select>
           </div>
+          <div class="form-group" id="balance_group" style="display: none;">
+            <label for="edit_balance">Balance</label>
+            <input type="text" class="form-control" id="edit_balance" name="balance" readonly>
+          </div>
+          <div class="form-group" id="employee_selection" style="display: none;">
+            <label for="edit_employee">Assign Employee</label>
+            <select class="form-control" id="edit_employee" name="employee_id">
+              <option value="">Select an employee</option>
+              <!-- We'll populate this dynamically with JavaScript -->
+            </select>
+          </div>
           <div class="form-group">
             <label for="edit_admin_note">Admin Note</label>
             <textarea class="form-control" id="edit_admin_note" name="admin_note" rows="3"></textarea>
@@ -165,6 +176,7 @@
           var formattedTime = formatTime(data.appointment_time);
           var originalPrice = parseFloat(data.service.price);
           var finalPrice = parseFloat(data.price);
+          var balance = parseFloat(data.balance);
           var detailsHtml = `
             <div class="d-flex flex-wrap">
               <div class="col-md-6 mb-3">
@@ -175,13 +187,14 @@
                 <p><strong>Service:</strong> ${data.service.service_name}</p>
                 <p><strong>Price:</strong> 
                   ${data.promo ? 
-                    `<span class="text-muted text-decoration-line-through"><s>₱${originalPrice.toFixed(2)}</s></span> 
+                    `<span class="text-muted text-decoration-line-through"> ₱${originalPrice.toFixed(2)}</span> 
                      <span class="text-success font-weight-bold">₱${finalPrice.toFixed(2)}</span>
                      <span class="badge badge-success">${data.promo.promo_name}</span>` 
                     : 
                     `₱${finalPrice.toFixed(2)}`
                   }
                 </p>
+                <p><strong>Balance:</strong> ₱${balance.toFixed(2)}</p>
                 <p><strong>Payment Type:</strong> ${data.payment_type}</p>
               </div>
               <div class="col-md-6 mb-3">
@@ -190,6 +203,7 @@
                 <p><strong>Admin Note:</strong> ${data.admin_note || 'N/A'}</p>
                 <p><strong>Proof:</strong> ${proofUrl ? `<a href="${proofUrl}" target="_blank">View Proof</a>` : 'No proof uploaded'}</p>
                 <p><strong>Date booked:</strong> ${new Date(data.created_at).toLocaleString()}</p>
+                <p><strong>Assigned Employee:</strong> ${data.employee ? `${data.employee.employee_first_name} ${data.employee.employee_last_name}` : 'Not assigned'}</p>
               </div>
             </div>
           `;
@@ -215,33 +229,83 @@
     // Edit Appointment
     $('.edit-appointment-btn').click(function() {
       var id = $(this).data('id');
-      $.get('/admin/appointments/' + id, function(data) {
+      $.get('/admin/appointments/' + id, function(response) {
+        var data = response.appointment;
+        var employees = response.employees;
+
         $('#edit_appointment_id').val(data.appointment_id);
         $('#edit_status').val(data.status);
         $('#edit_admin_note').val(data.admin_note);
+        $('#edit_appointment_id').data('original-status', data.status);
+        $('#edit_appointment_id').data('price', data.price);
+
+        populateEmployeeSelect(employees, data.employee_id);
+        updateFormBasedOnStatus(data.status, data.status);
+
         $('#editAppointmentModal').modal('show');
       });
     });
 
+    // Status change handler
+    $('#edit_status').change(function() {
+      var originalStatus = $('#edit_appointment_id').data('original-status');
+      var newStatus = $(this).val();
+
+      updateFormBasedOnStatus(originalStatus, newStatus);
+    });
+
+    function updateFormBasedOnStatus(originalStatus, newStatus) {
+      var price = parseFloat($('#edit_appointment_id').data('price'));
+
+      if (originalStatus === 'pending') {
+        if (newStatus !== 'pending') {
+          var balance = price / 2;
+          $('#edit_balance').val(balance.toFixed(2));
+          $('#balance_group').show();
+        } else {
+          $('#balance_group').hide();
+        }
+
+        if (newStatus === 'confirmed') {
+          $('#employee_selection').show();
+          $('#edit_employee').prop('disabled', false);
+        } else {
+          $('#employee_selection').hide();
+        }
+      } else {
+        $('#balance_group').hide();
+        $('#employee_selection').show();
+        $('#edit_employee').prop('disabled', true);
+      }
+    }
+
+    function populateEmployeeSelect(employees, selectedEmployeeId) {
+      var options = '<option value="">Select an employee</option>';
+      employees.forEach(function(employee) {
+        var selected = employee.employee_id === selectedEmployeeId ? 'selected' : '';
+        options += `<option value="${employee.employee_id}" ${selected}>${employee.employee_first_name} ${employee.employee_last_name}</option>`;
+      });
+      $('#edit_employee').html(options);
+    }
+
+    // Update Appointment
     $('#editAppointmentForm').submit(function(e) {
       e.preventDefault();
-      var id = $('#edit_appointment_id').val();
       var formData = $(this).serialize();
+      var id = $('#edit_appointment_id').val();
+
       $.ajax({
         url: '/admin/appointments/' + id,
         type: 'PUT',
         data: formData,
         success: function(response) {
-          if (response.success) {
-            $('#editAppointmentModal').modal('hide');
-            location.reload();
-          } else {
-            alert('Error: ' + response.message);
-          }
+          $('#editAppointmentModal').modal('hide');
+          // Refresh the appointments list or update the specific row
+          location.reload();
         },
         error: function(xhr) {
+          // Handle errors
           console.error(xhr.responseText);
-          alert('An error occurred while updating the appointment.');
         }
       });
     });

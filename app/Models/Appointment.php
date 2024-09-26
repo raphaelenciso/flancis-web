@@ -29,6 +29,7 @@ class Appointment extends Model {
     'promo_id',
     'notified1h',
     'notified1d',
+    'employee_id',
   ];
 
   protected $casts = [
@@ -54,6 +55,10 @@ class Appointment extends Model {
 
   public function promo() {
     return $this->belongsTo(Promo::class, 'promo_id', 'promo_id');
+  }
+
+  public function employee() {
+    return $this->belongsTo(Employee::class, 'employee_id', 'employee_id');
   }
 
   protected static function boot() {

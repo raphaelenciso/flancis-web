@@ -114,16 +114,16 @@
           <div id="qr_code_container" style="display: none;">
             <img id="qr_code_image" src="{{ asset('images/qr-codes/qrcode-placeholder.webp') }}" alt="Payment QR Code" class="img-fluid mb-3" style="max-width: 200px;">
           </div>
-          <div class="form-group">
+          <div class="form-group" id="proof_group">
             <label for="proof">Proof of Payment (50% Deposit Required)</label>
             <input type="file" class="form-control-file" id="proof" name="proof" required accept="image/*">
+          </div>
+          <div class="alert alert-info" role="alert">
+            <strong>Note:</strong> A 50% deposit is required to confirm your appointment. <strong>All payments are non-refundable.</strong>
           </div>
           <div class="form-group">
             <label for="remarks">Remarks (Optional)</label>
             <textarea class="form-control" id="remarks" name="remarks" rows="3"></textarea>
-          </div>
-          <div class="alert alert-info" role="alert">
-            <strong>Note:</strong> A 50% deposit is required to confirm your appointment.
           </div>
           <button type="submit" class="btn btn-primary">Book Appointment</button>
         </form>
@@ -144,18 +144,31 @@
     var bankOptions = document.getElementById('bank_options');
     var qrCodeContainer = document.getElementById('qr_code_container');
     var qrCodeImage = document.getElementById('qr_code_image');
+    var proofGroup = document.getElementById('proof_group');
+    var proofInput = document.getElementById('proof');
 
     paymentTypeSelect.addEventListener('change', function() {
       if (this.value === 'bank_transfer') {
         bankOptions.style.display = 'block';
         qrCodeContainer.style.display = 'none';
+        proofGroup.style.display = 'block';
+        proofInput.required = true;
       } else if (this.value === 'gcash') {
         bankOptions.style.display = 'none';
-        qrCodeImage.src = '{{ asset("images/payment-options/gcash-qr.png") }}';
+        qrCodeImage.src = '{{ asset("images/payment-options/gcash.png") }}';
         qrCodeContainer.style.display = 'block';
+        proofGroup.style.display = 'block';
+        proofInput.required = true;
+      } else if (this.value === 'cash') {
+        bankOptions.style.display = 'none';
+        qrCodeContainer.style.display = 'none';
+        proofGroup.style.display = 'none';
+        proofInput.required = false;
       } else {
         bankOptions.style.display = 'none';
         qrCodeContainer.style.display = 'none';
+        proofGroup.style.display = 'block';
+        proofInput.required = true;
       }
     });
 
@@ -245,13 +258,13 @@
 
     switch (bank) {
       case 'bdo':
-        qrCodeImage.src = '{{ asset("images/payment-options/bdo-qr.png") }}';
+        qrCodeImage.src = '{{ asset("images/payment-options/bdo.png") }}';
         break;
       case 'landbank':
-        qrCodeImage.src = '{{ asset("images/payment-options/landbank-qr.png") }}';
+        qrCodeImage.src = '{{ asset("images/payment-options/landbank.png") }}';
         break;
       default:
-        qrCodeImage.src = '{{ asset("images/payment-options/landbank-qr.png") }}';
+        qrCodeImage.src = '{{ asset("images/payment-options/landbank.png") }}';
     }
 
     qrCodeContainer.style.display = 'block';

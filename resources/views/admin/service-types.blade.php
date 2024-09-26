@@ -36,7 +36,9 @@
             <td>{{ ucfirst($type->status) }}</td>
             <td>
               <button class="btn btn-sm btn-primary edit-service-type-btn" data-id="{{ $type->service_type_id }}">Edit</button>
+              @if(env('SUPER_ADMIN_ENABLED', false))
               <button class="btn btn-sm btn-danger delete-service-type-btn" data-id="{{ $type->service_type_id }}">Delete</button>
+              @endif
             </td>
           </tr>
           @endforeach

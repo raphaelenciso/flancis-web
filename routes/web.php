@@ -21,7 +21,9 @@ use App\Http\Controllers\Admin\CalendarController;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\Admin\ReportsController;
+use App\Http\Controllers\Customer\ServicesController;
 use App\Http\Controllers\ForgotPasswordController;
+use App\Http\Controllers\Admin\SettingsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -71,7 +73,10 @@ Route::prefix('/customer')->group(function () {
   Route::post('/submit-rating', [ActivitiesController::class, 'submitRating']);
 
   Route::get('/profile', [ProfileController::class, 'show']);
+
+  Route::get('/services', [ServicesController::class, 'index']);
 });
+
 Route::redirect('/customer', '/customer/home');
 
 
@@ -123,5 +128,12 @@ Route::prefix('/admin')->group(function () {
   Route::get('/reports/export', [ReportsController::class, 'export'])->name('admin.reports.export');
   Route::get('/reports/fetch', [ReportsController::class, 'fetchReportData'])->name('admin.reports.fetch');
   Route::get('/reports/data/{period?}', [ReportsController::class, 'fetchReportData'])->name('admin.reports.data');
+
+  Route::get('/employees/list', [AppointmentController::class, 'getEmployees']);
+
+  Route::get('/settings', [SettingsController::class, 'index']);
+  Route::post('/settings/upload-qr', [SettingsController::class, 'uploadQR']);
+  Route::delete('/settings/remove-qr', [SettingsController::class, 'removeQR']);
 });
+
 Route::redirect('/admin', '/admin/dashboard');

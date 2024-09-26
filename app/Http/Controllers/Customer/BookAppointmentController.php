@@ -38,7 +38,7 @@ class BookAppointmentController extends Controller {
       'service_id' => 'required|exists:services_tbl,service_id',
       'payment_type' => 'required|in:cash,gcash,bank_transfer',
       'remarks' => 'nullable|string',
-      'proof' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+      'proof' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
       'price' => 'required|numeric',
       'promo_id' => 'nullable|exists:promos_tbl,promo_id',
     ]);
@@ -51,13 +51,12 @@ class BookAppointmentController extends Controller {
 
     $userId = Auth::id();
 
+    $proofPath = null;
     if ($request->hasFile('proof')) {
       $proofImage = $request->file('proof');
       $proofImageName = time() . '_' . $proofImage->getClientOriginalName();
       $proofImage->move(public_path('images/appointment-proofs'), $proofImageName);
       $proofPath = 'images/appointment-proofs/' . $proofImageName;
-    } else {
-      return redirect()->back()->with('error', 'Proof of payment is required.');
     }
 
     $appointment = new Appointment([

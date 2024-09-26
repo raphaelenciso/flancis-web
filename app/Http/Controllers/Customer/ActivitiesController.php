@@ -7,17 +7,43 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Appointment;
 use App\Models\ServiceRating;
+use Carbon\Carbon;
 
 class ActivitiesController extends Controller {
-  public function index() {
+  public function index(Request $request) {
     $user_id = Auth::id();
+    $search = $request->input('search');
+
     $appointments = Appointment::with(['service.serviceType', 'promo'])
       ->where('user_id', $user_id)
+      ->when($search, function ($query) use ($search) {
+        return $query->whereHas('service', function ($q) use ($search) {
+          $q->where('service_name', 'like', "%{$search}%")
+            ->orWhereHas('serviceType', function ($q) use ($search) {
+              $q->where('service_type', 'like', "%{$search}%");
+            });
+        });
+      })
       ->orderByDesc('appointment_date')
       ->orderByDesc('appointment_time')
       ->get();
 
-    return view('customer.activities', compact('appointments'));
+    $currentMonth = Carbon::now()->format('Y-m');
+
+    $appointmentsByCategory = [
+      'upcoming' => $appointments->filter(function ($appointment) {
+        return $appointment->appointment_date >= Carbon::today() && !in_array($appointment->status, ['cancelled', 'rejected']);
+      }),
+      'recent' => $appointments->filter(function ($appointment) use ($currentMonth) {
+        return $appointment->appointment_date->format('Y-m') === $currentMonth;
+      }),
+      'cancelled' => $appointments->where('status', 'cancelled'),
+      'rejected' => $appointments->where('status', 'rejected'),
+      'completed' => $appointments->where('status', 'completed'),
+      'all' => $appointments,
+    ];
+
+    return view('customer.activities', compact('appointmentsByCategory', 'search'));
   }
 
   public function submitRating(Request $request) {
