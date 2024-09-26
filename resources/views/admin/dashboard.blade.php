@@ -254,9 +254,7 @@ return 'secondary';
   $(document).ready(function() {
     var ctx = $("#myAreaChart");
     var monthlyData = @json(array_values($monthlyData));
-    var myLineChart = createAreaChart(ctx, monthlyData);
-
-    console.log(monthlyData);
+    var myLineChart = createAreaChart(ctx, undefined, monthlyData);
 
     var serviceTypeData = @json($serviceTypeRevenue);
     var labels = serviceTypeData.map(item => item.service_type);
