@@ -7,14 +7,58 @@ use App\Models\Appointment;
 use App\Models\Service;
 use App\Models\ServiceType;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Storage;
 
 class ReportsController extends Controller {
   public function index() {
     return view('admin.reports');
   }
 
-  public function export() {
-    // Implement export logic here
+  public function export($period = 'yearly') {
+    $data = $this->fetchReportData($period)->getData(true);
+
+    $csv = $this->generateCsv($data, $period);
+
+    $headers = [
+      'Content-Type' => 'text/csv',
+      'Content-Disposition' => 'attachment; filename="report_' . $period . '_' . now()->format('Y-m-d') . '.csv"',
+    ];
+
+    return response($csv, 200, $headers);
+  }
+
+  private function generateCsv($data, $period) {
+    $csv = fopen('php://temp', 'r+');
+
+    // Earnings Overview
+    fputcsv($csv, ['Earnings Overview - ' . ucfirst($period)]);
+    fputcsv($csv, ['Period', 'Earnings']);
+    foreach ($data['earningsData']['labels'] as $index => $label) {
+      fputcsv($csv, [$label, $data['earningsData']['data'][$index]]);
+    }
+    fputcsv($csv, []); // Empty line for separation
+
+    // Top Services
+    fputcsv($csv, ['Top Services']);
+    fputcsv($csv, ['Service Name', 'Average Rating', 'Rating Count']);
+    foreach ($data['topServices'] as $service) {
+      fputcsv($csv, [$service['name'], $service['avg_rating'], $service['rating_count']]);
+    }
+    fputcsv($csv, []);
+
+    // Revenue Sources
+    fputcsv($csv, ['Revenue Sources']);
+    fputcsv($csv, ['Service Type', 'Appointment Count']);
+    foreach ($data['serviceTypeRevenue'] as $revenueSource) {
+      fputcsv($csv, [$revenueSource['service_type'], $revenueSource['appointment_count']]);
+    }
+
+    rewind($csv);
+    $content = stream_get_contents($csv);
+    fclose($csv);
+
+    return $content;
   }
 
   public function fetchReportData($period = 'yearly') {
@@ -110,7 +154,7 @@ class ReportsController extends Controller {
 
     return response()->json([
       'period' => $period,
-      'monthlyData' => [
+      'earningsData' => [
         'labels' => $labels,
         'data' => $data,
       ],
