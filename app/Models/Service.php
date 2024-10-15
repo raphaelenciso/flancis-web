@@ -20,6 +20,7 @@ class Service extends Model {
     'price',
     'rating',
     'description',
+    'service_image', // Add this line
     'status',
   ];
 

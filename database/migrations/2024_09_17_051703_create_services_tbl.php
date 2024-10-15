@@ -17,6 +17,7 @@ return new class extends Migration {
       $table->decimal('price', 10, 2);
       // $table->decimal('rating', 10, 2)->nullable();
       $table->text('description')->nullable();
+      $table->string('service_image')->nullable(); // Add this line
       $table->enum('status', ['active', 'inactive'])->default('active');
       $table->timestamps();
 

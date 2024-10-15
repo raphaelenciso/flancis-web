@@ -7,6 +7,7 @@ use App\Models\Service;
 use App\Models\ServiceType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
 
 class ServiceController extends Controller {
   public function index() {
@@ -21,6 +22,7 @@ class ServiceController extends Controller {
       'service_type_id' => 'required|exists:service_types_tbl,service_type_id',
       'price' => 'required|numeric|min:0',
       'description' => 'nullable|string',
+      'service_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
       'status' => 'required|in:active,inactive',
     ]);
 
@@ -30,6 +32,14 @@ class ServiceController extends Controller {
     $service->price = $request->price;
     $service->description = $request->description;
     $service->status = $request->status;
+
+    if ($request->hasFile('service_image')) {
+      $image = $request->file('service_image');
+      $imageName = time() . '_' . $image->getClientOriginalName();
+      $image->move(public_path('images/services'), $imageName);
+      $service->service_image = 'images/services/' . $imageName;
+    }
+
     $service->save();
 
     return response()->json([
@@ -45,6 +55,7 @@ class ServiceController extends Controller {
       'service_type_id' => 'required|exists:service_types_tbl,service_type_id',
       'price' => 'required|numeric|min:0',
       'description' => 'nullable|string',
+      'service_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
       'status' => 'required|in:active,inactive',
     ]);
 
@@ -54,6 +65,19 @@ class ServiceController extends Controller {
     $service->price = $request->price;
     $service->description = $request->description;
     $service->status = $request->status;
+
+    if ($request->hasFile('service_image')) {
+      // Delete old image
+      if ($service->service_image) {
+        File::delete(public_path($service->service_image));
+      }
+
+      $image = $request->file('service_image');
+      $imageName = time() . '_' . $image->getClientOriginalName();
+      $image->move(public_path('images/services'), $imageName);
+      $service->service_image = 'images/services/' . $imageName;
+    }
+
     $service->save();
 
     return response()->json([
@@ -65,6 +89,11 @@ class ServiceController extends Controller {
 
   public function destroy($id) {
     $service = Service::findOrFail($id);
+
+    if ($service->service_image) {
+      File::delete(public_path($service->service_image));
+    }
+
     $service->delete();
 
     return response()->json([

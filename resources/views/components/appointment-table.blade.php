@@ -1,5 +1,5 @@
 <div class="table-responsive">
-  <table class="table table-bordered" width="100%" cellspacing="0">
+  <table class="table table-bordered" width="100%" cellspacing="0" id="{{ $id }}">
     <thead>
       <tr>
         <th>Appointment ID</th>

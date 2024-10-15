@@ -46,22 +46,22 @@
   <div class="card-body">
     <div class="tab-content">
       <div class="tab-pane fade show active" id="all">
-        <x-appointment-table :appointments="$appointments" />
+        <x-appointment-table :appointments="$appointments" id="allAppointmentsTable" />
       </div>
       <div class="tab-pane fade" id="pending">
-        <x-appointment-table :appointments="$appointments->where('status', 'pending')" />
+        <x-appointment-table :appointments="$appointments->where('status', 'pending')" id="pendingAppointmentsTable" />
       </div>
       <div class="tab-pane fade" id="confirmed">
-        <x-appointment-table :appointments="$appointments->where('status', 'confirmed')" />
+        <x-appointment-table :appointments="$appointments->where('status', 'confirmed')" id="confirmedAppointmentsTable" />
       </div>
       <div class="tab-pane fade" id="rejected">
-        <x-appointment-table :appointments="$appointments->where('status', 'rejected')" />
+        <x-appointment-table :appointments="$appointments->where('status', 'rejected')" id="rejectedAppointmentsTable" />
       </div>
       <div class="tab-pane fade" id="cancelled">
-        <x-appointment-table :appointments="$appointments->where('status', 'cancelled')" />
+        <x-appointment-table :appointments="$appointments->where('status', 'cancelled')" id="cancelledAppointmentsTable" />
       </div>
       <div class="tab-pane fade" id="completed">
-        <x-appointment-table :appointments="$appointments->where('status', 'completed')" />
+        <x-appointment-table :appointments="$appointments->where('status', 'completed')" id="completedAppointmentsTable" />
       </div>
     </div>
   </div>
@@ -146,12 +146,12 @@
 
 <script>
   $(document).ready(function() {
-    var allTable = $('#appointmentsTable').DataTable();
-    var pendingTable = $('#pendingTable').DataTable();
-    var confirmedTable = $('#confirmedTable').DataTable();
-    var rejectedTable = $('#rejectedTable').DataTable();
-    var cancelledTable = $('#cancelledTable').DataTable();
-    var completedTable = $('#completedTable').DataTable();
+    var allTable = $('#allAppointmentsTable').DataTable();
+    var pendingTable = $('#pendingAppointmentsTable').DataTable();
+    var confirmedTable = $('#confirmedAppointmentsTable').DataTable();
+    var rejectedTable = $('#rejectedAppointmentsTable').DataTable();
+    var cancelledTable = $('#cancelledAppointmentsTable').DataTable();
+    var completedTable = $('#completedAppointmentsTable').DataTable();
 
     // Filter table based on status when tab is clicked
     $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
@@ -169,7 +169,9 @@
       $.ajax({
         url: '/admin/appointments/' + id,
         type: 'GET',
-        success: function(data) {
+        success: function({
+          appointment: data
+        }) {
           var statusClass = getStatusClass(data.status);
           var proofUrl = data.proof ? "{{ asset('') }}" + data.proof : null;
           var formattedDate = formatDate(data.appointment_date);
@@ -257,7 +259,7 @@
     function updateFormBasedOnStatus(originalStatus, newStatus) {
       var price = parseFloat($('#edit_appointment_id').data('price'));
 
-      if (originalStatus === 'pending') {
+      if (originalStatus === 'pending' || originalStatus === 'confirmed') {
         if (newStatus !== 'pending') {
           var balance = price / 2;
           $('#edit_balance').val(balance.toFixed(2));
@@ -266,7 +268,7 @@
           $('#balance_group').hide();
         }
 
-        if (newStatus === 'confirmed') {
+        if (newStatus === 'confirmed' || newStatus === 'completed') {
           $('#employee_selection').show();
           $('#edit_employee').prop('disabled', false);
         } else {

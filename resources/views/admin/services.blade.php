@@ -19,6 +19,7 @@
             <th>Service Name</th>
             <th>Service Type</th>
             <th>Price</th>
+            <th>Image</th>
             <th>Rating</th>
             <th>Status</th>
             <th>Actions</th>
@@ -30,6 +31,13 @@
             <td data-description="{{ $service->description }}">{{ $service->service_name }}</td>
             <td>{{ $service->serviceType->service_type }}</td>
             <td>₱{{ number_format($service->price, 2) }}</td>
+            <td>
+              @if ($service->service_image)
+              <img src="{{ asset($service->service_image) }}" alt="{{ $service->service_name }}" style="max-width: 100px; max-height: 100px;">
+              @else
+              No image
+              @endif
+            </td>
             <td>{{ $service->rating ?? 'N/A' }}</td>
             <td>{{ ucfirst($service->status) }}</td>
             <td>
@@ -56,7 +64,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form id="addServiceForm">
+      <form id="addServiceForm" enctype="multipart/form-data">
         @csrf
         <div class="modal-body">
           <div class="form-group">
@@ -86,6 +94,10 @@
               <option value="inactive">Inactive</option>
             </select>
           </div>
+          <div class="form-group">
+            <label for="service_image">Image</label>
+            <input type="file" class="form-control-file" id="service_image" name="service_image" accept="image/*">
+          </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -106,7 +118,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form id="editServiceForm">
+      <form id="editServiceForm" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         <input type="hidden" id="edit_service_id" name="service_id">
@@ -137,6 +149,11 @@
               <option value="active">Active</option>
               <option value="inactive">Inactive</option>
             </select>
+          </div>
+          <div class="form-group">
+            <label for="edit_service_image">Image</label>
+            <input type="file" class="form-control-file" id="edit_service_image" name="service_image" accept="image/*">
+            <img id="current_service_image" src="" alt="Current Image" style="max-width: 100px; max-height: 100px; margin-top: 10px;">
           </div>
         </div>
         <div class="modal-footer">
@@ -214,9 +231,10 @@
       var row = $(this).closest('tr');
       var name = row.find('td:eq(0)').text();
       var typeText = row.find('td:eq(1)').text();
-      var price = parseFloat(row.find('td:eq(2)').text().replace('$', ''));
+      var price = parseFloat(row.find('td:eq(2)').text().replace('₱', ''));
       var description = row.find('td:eq(0)').data('description');
-      var status = row.find('td:eq(4)').text().toLowerCase();
+      var status = row.find('td:eq(5)').text().toLowerCase();
+      var imageSrc = row.find('img').attr('src');
 
       $('#edit_service_id').val(id);
       $('#edit_service_name').val(name);
@@ -226,6 +244,7 @@
       $('#edit_price').val(price);
       $('#edit_description').val(description);
       $('#edit_status').val(status);
+      $('#current_service_image').attr('src', imageSrc);
 
       $('#editServiceModal').modal('show');
     });

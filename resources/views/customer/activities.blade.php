@@ -89,15 +89,15 @@ return 'secondary';
                     View Reason
                   </button>
                   @endif
-                  @if($appointment->status == 'completed' && $appointment->appointment_date < date('Y-m-d'))
-                    @if($appointment->is_rated)
-                    <div class='rating-stars'>{{ $appointment->serviceRating->rating }} <i class="fas fa-star text-warning"></i></div>
-                    @else
-                    <button class="btn btn-primary btn-sm rate-service-btn" onclick="openRatingModal('{{ $appointment->appointment_id }}', '{{ $appointment->service->service_name }}')">
-                      Rate Service
-                    </button>
-                    @endif
-                    @endif
+                  @if($appointment->status == 'completed')
+                  @if($appointment->is_rated)
+                  <div class='rating-stars'>{{ $appointment->serviceRating->rating }} <i class="fas fa-star text-warning"></i></div>
+                  @else
+                  <button class="btn btn-primary btn-sm rate-service-btn" onclick="openRatingModal('{{ $appointment->appointment_id }}', '{{ $appointment->service->service_name }}')">
+                    Rate Service
+                  </button>
+                  @endif
+                  @endif
                 </div>
                 <div class="card-body">
                   <h6 class="card-subtitle mb-2 text-muted">
