@@ -8,7 +8,10 @@ use Illuminate\Http\Request;
 
 class ServicesController extends Controller {
   public function index() {
-    $serviceTypes = ServiceType::with('services')->where('status', 'active')->get();
+    $serviceTypes = ServiceType::with(['services' => function ($query) {
+      $query->withAvg('serviceRatings', 'rating')
+        ->withCount('serviceRatings');
+    }])->where('status', 'active')->get();
     return view('customer.services', compact('serviceTypes'));
   }
 }

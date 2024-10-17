@@ -27,12 +27,15 @@
                     <h5 class="card-title">{{ $service->service_name }}</h5>
                     <p class="card-text">{{ $service->description }}</p>
                     <p class="card-text"><strong>Price:</strong> ₱{{ number_format($service->price, 2) }}</p>
-                    @if($service->rating)
+                    @if($service->service_ratings_count > 0)
                     <p class="card-text">
                       <strong>Rating:</strong>
-                      {{ number_format($service->rating, 1) }}
+                      {{ number_format($service->service_ratings_avg_rating, 1) }}
                       <i class="fas fa-star text-warning"></i>
+                      ({{ $service->service_ratings_count }} {{ Str::plural('rating', $service->service_ratings_count) }})
                     </p>
+                    @else
+                    <p class="card-text text-muted">No ratings yet</p>
                     @endif
                   </div>
                 </div>
