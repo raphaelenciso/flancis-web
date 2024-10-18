@@ -17,8 +17,6 @@ class EmployeeController extends Controller {
   }
 
   public function store(Request $request) {
-    return 'test';
-
     $validatedData = $request->validate([
       'employee_first_name' => 'required|string|max:255',
       'employee_middle_name' => 'nullable|string|max:255',
@@ -51,8 +49,6 @@ class EmployeeController extends Controller {
   }
 
   public function update(Request $request, $id) {
-    return 'test';
-
     $employee = Employee::findOrFail($id);
 
     $validatedData = $request->validate([
