@@ -9,11 +9,11 @@
 <!-- Add this section to display validation errors -->
 @if ($errors->any())
 <div class="alert alert-danger">
-    <ul>
-        @foreach ($errors->all() as $error)
-            <li>{{ $error }}</li>
-        @endforeach
-    </ul>
+  <ul>
+    @foreach ($errors->all() as $error)
+    <li>{{ $error }}</li>
+    @endforeach
+  </ul>
 </div>
 @endif
 
@@ -23,19 +23,21 @@
     <h6 class="m-0 font-weight-bold text-primary">{{ isset($employee) ? 'Edit' : 'Add' }} Employee</h6>
   </div>
   <div class="card-body">
-    <form method="POST" action="{{ isset($employee) ? '/admin/employees/' . $employee->employee_id : '/admin/employees/'  }}" enctype="multipart/form-data">
+    <form method="POST" action="{{ isset($employee) ? '/admin/employees/' . $employee->employee_id : '/admin/employees'  }}" enctype="multipart/form-data">
       @csrf
       @if(isset($employee))
-        @method('PUT')
+      @method('PUT')
+      @else
+      @method('POST')
       @endif
-      
+
       <!-- Profile Picture Section -->
       <div class="form-group text-center mb-4">
         <label for="employee_image">Employee Picture</label>
         <div class="mb-2">
-          <img   src="{{ isset($employee) && $employee->employee_image ? asset('images/employee-images/' . $employee->employee_image) : asset('images/user-placeholder.png') }}" alt="Employee Picture" class="rounded-circle" style="width: 200px; height: 200px; object-fit: cover; cursor: pointer;" id="profile-image">
+          <img src="{{ isset($employee) && $employee->employee_image ? asset('images/employee-images/' . $employee->employee_image) : asset('images/user-placeholder.png') }}" alt="Employee Picture" class="rounded-circle" style="width: 200px; height: 200px; object-fit: cover; cursor: pointer;" id="profile-image">
 
-          
+
 
         </div>
         <input type="file" class="form-control-file d-none" id="employee_image" name="employee_image" accept="image/*">
@@ -98,7 +100,7 @@
         <label for="address">Address</label>
         <textarea class="form-control" id="address" name="address" rows="3">{{ $employee->address ?? old('address') }}</textarea>
       </div>
-      
+
       <div class="form-group">
         <button type="submit" class="btn btn-primary">{{ isset($employee) ? 'Update' : 'Add' }} Employee</button>
         <a href="/admin/employees" class="btn btn-secondary">Cancel</a>
