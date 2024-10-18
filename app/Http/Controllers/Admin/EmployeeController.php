@@ -32,7 +32,7 @@ class EmployeeController extends Controller {
 
     if ($request->hasFile('employee_image')) {
       $extension = $request->employee_image->extension();
-      $imageName = $validatedData['email'] . '.' . $extension;
+      $imageName = str_replace(['@', '.'], '', $validatedData['email']) . '.' . $extension;
       $request->employee_image->move(public_path('images/employee-images'), $imageName);
       $validatedData['employee_image'] = $imageName;
     }

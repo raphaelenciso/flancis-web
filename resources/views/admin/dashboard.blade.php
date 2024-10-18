@@ -204,28 +204,30 @@ return 'secondary';
           @forelse($todayAppointments as $appointment)
           <div class="card mb-3">
             <div class="card-body py-2">
-              <div class="row no-gutters align-items-center">
-                <div class="col-auto mr-2">
-                  <img src="{{ $appointment->user->picture ?  asset("images/customer-pictures/" . $appointment->user->picture) : asset('images/user-placeholder.png') }}"
-                    class="rounded-circle" width="40" height="40"
-                    alt="{{ $appointment->user->first_name }} {{ $appointment->user->last_name }}">
+              <a href="{{ url('/admin/appointments') }}" class="text-decoration-none text-reset">
+                <div class="row no-gutters align-items-center">
+                  <div class="col-auto mr-2">
+                    <img src="{{ $appointment->user->picture ?  asset("images/customer-pictures/" . $appointment->user->picture) : asset('images/user-placeholder.png') }}"
+                      class="rounded-circle" width="40" height="40"
+                      alt="{{ $appointment->user->first_name }} {{ $appointment->user->last_name }}">
+                  </div>
+                  <div class="col">
+                    <h6 class="mb-0">
+                      {{ $appointment->user->first_name }}
+                      {{ $appointment->user->middle_name ? $appointment->user->middle_name . ' ' : '' }}
+                      {{ $appointment->user->last_name }}
+                    </h6>
+                    <small class="text-muted">
+                      {{ $appointment->service->service_name }} at {{ $appointment->appointment_time->format('g:i A') }}
+                    </small>
+                  </div>
+                  <div class="col-auto">
+                    <span class="badge badge-{{ getStatusClass($appointment->status) }}">
+                      {{ ucfirst($appointment->status) }}
+                    </span>
+                  </div>
                 </div>
-                <div class="col">
-                  <h6 class="mb-0">
-                    {{ $appointment->user->first_name }}
-                    {{ $appointment->user->middle_name ? $appointment->user->middle_name . ' ' : '' }}
-                    {{ $appointment->user->last_name }}
-                  </h6>
-                  <small class="text-muted">
-                    {{ $appointment->service->service_name }} at {{ $appointment->appointment_time->format('g:i A') }}
-                  </small>
-                </div>
-                <div class="col-auto">
-                  <span class="badge badge-{{ getStatusClass($appointment->status) }}">
-                    {{ ucfirst($appointment->status) }}
-                  </span>
-                </div>
-              </div>
+              </a>
             </div>
           </div>
           @empty
