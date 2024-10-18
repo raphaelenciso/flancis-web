@@ -51,6 +51,8 @@ class EmployeeController extends Controller {
   }
 
   public function update(Request $request, $id) {
+    return 'test';
+
     $employee = Employee::findOrFail($id);
 
     $validatedData = $request->validate([
