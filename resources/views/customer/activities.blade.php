@@ -231,7 +231,6 @@ return 'secondary';
         _token: '{{ csrf_token() }}'
       },
       success: function(response) {
-        alert('Rating submitted successfully!');
         $('#ratingModal').modal('hide');
         location.reload();
       },

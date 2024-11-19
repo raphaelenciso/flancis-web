@@ -10,7 +10,7 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="{{ asset('vendor/swiper/swiper-bundle.min.css') }}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css">
 
   <style>
     .font-playfair {
@@ -19,6 +19,28 @@
 
     .font-inter {
       font-family: 'Inter', sans-serif;
+    }
+
+    /* Custom Swiper Navigation Styles */
+    .swiper-button-next,
+    .swiper-button-prev {
+      width: 40px;
+      height: 40px;
+      background-color: #7D4D00;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .swiper-button-next:after,
+    .swiper-button-prev:after {
+      display: none;
+      /* Hide default swiper icons */
+    }
+
+    .swiper-button-disabled {
+      opacity: 0.5;
     }
   </style>
 </head>
@@ -119,23 +141,36 @@
           Indulge in our top-notch treatments, all set within a serene environment designed for your comfort and rejuvenation. Our dedicated team is here to ensure you unwind and experience the ultimate in self-care.
         </p>
       </div>
-      <div class="swiper-container">
-        <div class="swiper-wrapper">
-          @foreach($serviceTypes as $serviceType)
-          <div class="swiper-slide">
-            <div class="w-64 mx-auto relative group">
-              <img src="{{ asset($serviceType->service_image) }}" alt="{{ $serviceType->service_type }}" class="w-full h-48 object-cover rounded-lg mb-2">
-              <h3 class="text-xl font-bold text-[#7D4D00] mb-1 text-center">{{ $serviceType->service_type }}</h3>
-              <div class="absolute inset-0 bg-black bg-opacity-75 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-center items-center p-4 overflow-y-auto">
-                @foreach($serviceType->services as $service)
-                <div class="text-white mb-2">
-                  <h4 class="font-semibold">{{ $service->service_name }}</h4>
+      <div class="relative px-12">
+        <div class="swiper-container">
+          <div class="swiper-wrapper">
+            @foreach($serviceTypes as $serviceType)
+            <div class="swiper-slide">
+              <div class="w-64 mx-auto relative group">
+                <img src="{{ asset($serviceType->service_image) }}" alt="{{ $serviceType->service_type }}" class="w-full h-48 object-cover rounded-lg mb-2">
+                <h3 class="text-xl font-bold text-[#7D4D00] mb-1 text-center">{{ $serviceType->service_type }}</h3>
+                <div class="absolute inset-0 bg-black bg-opacity-75 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-center items-center p-4 overflow-y-auto">
+                  @foreach($serviceType->services as $service)
+                  <div class="text-white mb-2">
+                    <h4 class="font-semibold">{{ $service->service_name }}</h4>
+                  </div>
+                  @endforeach
                 </div>
-                @endforeach
               </div>
             </div>
+            @endforeach
           </div>
-          @endforeach
+          <!-- Custom Navigation Arrows -->
+          <div class="swiper-button-prev">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M15 18l-6-6 6-6" />
+            </svg>
+          </div>
+          <div class="swiper-button-next">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 18l6-6-6-6" />
+            </svg>
+          </div>
         </div>
       </div>
     </div>
@@ -257,7 +292,7 @@
 
 
 
-  <script src="{{ asset('vendor/swiper/swiper-bundle.min.js') }}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
 
   <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
 

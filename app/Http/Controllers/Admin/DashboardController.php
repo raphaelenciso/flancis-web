@@ -11,6 +11,7 @@ use App\Models\Notification;
 use Illuminate\Support\Facades\DB;
 use App\Models\ServiceType;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class DashboardController extends Controller {
   public function index() {
@@ -67,6 +68,32 @@ class DashboardController extends Controller {
       ->orderBy('appointment_time')
       ->get();
 
+    // Add calendar events
+    $events = Appointment::where('status', 'confirmed')
+      ->with(['service'])
+      ->get()
+      ->map(function ($appointment) {
+        try {
+          $date = Carbon::parse($appointment->appointment_date)->format('Y-m-d');
+          $time = Carbon::parse($appointment->appointment_time)->format('H:i:s');
+          $start = $date . 'T' . $time;
+
+          return [
+            'title' => $appointment->service->service_name,
+            'start' => $start,
+          ];
+        } catch (\Exception $e) {
+          Log::error('Error parsing appointment date/time', [
+            'appointment_id' => $appointment->id,
+            'date' => $appointment->appointment_date,
+            'time' => $appointment->appointment_time,
+            'error' => $e->getMessage()
+          ]);
+          return null;
+        }
+      })
+      ->filter();
+
     return view('admin.dashboard', compact(
       'totalCustomers',
       'totalSales',
@@ -76,6 +103,7 @@ class DashboardController extends Controller {
       'topServices',
       'serviceTypeRevenue',
       'todayAppointments',
+      'events'
     ));
   }
 }
